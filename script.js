@@ -1,35 +1,36 @@
 (async () => {
-  console.log("Retronyte script starting...");
   try {
-    const response = await fetch("videos/latest.json?cache=" + Date.now());
-    console.log("Fetch status:", response.status);
-    const data = await response.json();
-    console.log("Video data fetched:", data);
+    const res = await fetch("videos/latest.json?cb=" + Date.now());
+    const data = await res.json();
 
     const wrapper = document.getElementById("video-wrapper");
     const ticker  = document.getElementById("now-playing");
 
-    if (!wrapper || !ticker) {
-      console.error("Missing wrapper or ticker element");
-      return;
-    }
-
     if (data.source === "streamable" && data.id) {
-      const iframeHTML = `
+      wrapper.innerHTML = `
         <iframe
           src="https://streamable.com/e/${data.id}"
           frameborder="0"
           allowfullscreen
-          style="width:100%;height:100%;border-radius:12px;">
+          title="${data.title || 'Retronyte Video'}">
         </iframe>`;
-      wrapper.innerHTML = iframeHTML;
-      ticker.textContent = `🎵 Now Playing: ${data.title || "Untitled"}`;
-      console.log("Streamable iframe inserted.");
+      ticker.textContent = `🎵 Now Playing: ${data.title || "Retronyte Episode"}`;
+    } else if (data.source === "youtube" && data.id) {
+      wrapper.innerHTML = `
+        <iframe
+          src="https://www.youtube.com/embed/${data.id}"
+          frameborder="0"
+          allowfullscreen
+          title="${data.title || 'Retronyte Video'}">
+        </iframe>`;
+      ticker.textContent = `🎵 Now Playing: ${data.title || "Retronyte Episode"}`;
     } else {
-      wrapper.innerHTML = "<p>⚙️ Invalid JSON format.</p>";
-      console.warn("Invalid JSON structure:", data);
+      wrapper.innerHTML = "<p>⚙️ No playable video configured.</p>";
+      ticker.textContent = "⚙️ Update videos/latest.json";
     }
-  } catch (err) {
-    console.error("Video load error:", err);
+  } catch (e) {
+    document.getElementById("video-wrapper").innerHTML =
+      "<p>⚠️ Could not load latest episode.</p>";
+    console.error(e);
   }
 })();
