@@ -17,10 +17,7 @@ nav a {
   margin: 0 10px;
   text-decoration: none;
 }
-
-nav a:hover {
-  color: #ff00ff;
-}
+nav a:hover { color: #ff00ff; }
 
 .video-frame {
   position: relative;
@@ -52,12 +49,10 @@ iframe {
   padding: 10px;
   font-size: 1.3rem;
 }
-
 .ticker span {
   display: inline-block;
   animation: scroll 12s linear infinite;
 }
-
 @keyframes scroll {
   0% { transform: translateX(100%); }
   100% { transform: translateX(-100%); }
@@ -70,15 +65,13 @@ iframe {
   max-width: 900px;
   margin: 0 auto;
 }
-
 .video-card {
   border: 2px solid #00ffea;
   padding: 10px;
   border-radius: 10px;
-  background: rgba(10, 10, 20, 0.8);
+  background: rgba(10,10,20,0.8);
   transition: transform 0.3s;
 }
-
 .video-card:hover {
   transform: scale(1.05);
   box-shadow: 0 0 15px #ff00ff;
