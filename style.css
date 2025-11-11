@@ -1,36 +1,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-body {
-  background: radial-gradient(circle at center,#060608 0%,#020204 100%);
-  color:#00ffea;
+body{
+  background:radial-gradient(circle at center,#07070d 0%,#020204 100%);
+  color:#00ffee;
   font-family:'Press Start 2P',monospace;
   text-align:center;
   margin:0;
   overflow-x:hidden;
 }
 
-/* === HEADER / LOGO === */
+/* === HEADER === */
 .logo{
-  font-size:3rem;
-  margin:1rem 0 .5rem;
+  font-size:2.5rem;
+  margin:1.2rem 0 .4rem;
   color:#00ffff;
-  text-shadow:0 0 6px #00ffff,0 0 18px #00ffff,0 0 36px #ff00ff;
-  animation:glowShift 3s infinite alternate;
+  text-shadow:0 0 8px #00ffff,0 0 16px #00ccff,0 0 32px #ff00ff;
+  animation:logoGlow 3s infinite alternate;
 }
 
-/* === CATCHPHRASE === */
 .catchphrase{
-  font-size:1.1rem;
-  margin:0 0 1.5rem;
-  color:#ff00ff;
-  text-shadow:0 0 6px #ff00ff,0 0 18px #ff33ff,0 0 30px #00ffff;
-  letter-spacing:3px;
+  font-size:1rem;
+  margin:0 0 1.4rem;
+  color:#ff33ff;
+  text-shadow:0 0 6px #ff00ff,0 0 12px #ff66ff,0 0 20px #00ffff;
+  letter-spacing:2px;
   animation:pulseGlow 2.5s infinite alternate;
 }
 
-/* === NAVIGATION === */
+/* === NAV === */
 nav a{
-  color:#00ffea;
+  color:#00ffee;
   margin:0 12px;
   text-decoration:none;
   font-size:.8rem;
@@ -38,49 +37,47 @@ nav a{
 }
 nav a:hover{
   color:#ff00ff;
-  text-shadow:0 0 10px #ff00ff;
+  text-shadow:0 0 8px #ff00ff;
 }
 
-/* === HOME SECTION (WIP) === */
+/* === HOME / CRT === */
 .home-section{
-  background:rgba(10,10,20,.7);
+  background:rgba(10,10,20,.75);
   border-top:2px solid #00ffff;
   border-bottom:2px solid #00ffff;
-  padding:50px 20px;
-  max-width:1200px;
+  padding:40px 20px;
+  max-width:960px;
   margin:0 auto 40px;
   box-shadow:inset 0 0 20px #00ffff;
   animation:flicker 3s infinite;
 }
 .home-section h2{
   color:#ff00ff;
-  font-size:1.4rem;
+  font-size:1.2rem;
   text-shadow:0 0 10px #ff00ff,0 0 20px #00ffff;
 }
 .home-section p{
-  color:#00ffea;
-  text-shadow:0 0 8px #00ffff;
+  color:#00ffee;
+  text-shadow:0 0 6px #00ffff;
 }
 .crt-glow{
   width:100%;
-  height:5px;
+  height:4px;
   background:radial-gradient(circle,#00ffff55 0%,transparent 70%);
-  margin-top:20px;
+  margin-top:16px;
   animation:flicker 1.8s infinite;
 }
 
 /* === VIDEO FRAME === */
 .video-frame{
   position:relative;
-  width:80%;
-  max-width:1920px;
+  width:960px;
   aspect-ratio:16/9;
-  margin:30px auto;
+  margin:25px auto;
   border:3px solid #00ffff;
   border-radius:12px;
-  box-shadow:0 0 25px #00ffff;
+  box-shadow:0 0 20px #00ffff;
   background:black;
-  overflow:hidden;
 }
 iframe{
   position:absolute;
@@ -91,44 +88,44 @@ iframe{
   border-radius:12px;
 }
 
+/* responsive */
+@media (max-width:1000px){
+  .video-frame{width:90%;height:auto;}
+}
+
 /* === TICKER === */
 .ticker{
   background:#101018;
-  overflow:hidden;
   white-space:nowrap;
+  overflow:hidden;
   box-shadow:inset 0 0 10px #00ffff;
-  color:#00ffea;
-  padding:10px;
-  font-size:.8rem;
-  letter-spacing:1px;
+  color:#00ffee;
+  padding:8px;
+  font-size:.75rem;
 }
 .ticker span{
   display:inline-block;
-  animation:scroll 14s linear infinite;
+  animation:scroll 12s linear infinite;
 }
 
 /* === FOOTER === */
 footer{
-  margin-top:3rem;
+  margin:2rem 0 1rem;
   font-size:.7rem;
   color:#808080;
-  text-shadow:0 0 5px #00ffff33;
 }
 
 /* === ANIMATIONS === */
-@keyframes scroll{
-  0%{transform:translateX(100%)}
-  100%{transform:translateX(-100%)}
-}
+@keyframes scroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
 @keyframes flicker{
-  0%,18%,22%,25%,53%,57%,100%{opacity:.8}
-  20%,24%,55%{opacity:.5}
+  0%,18%,22%,25%,53%,57%,100%{opacity:.8;}
+  20%,24%,55%{opacity:.5;}
 }
 @keyframes pulseGlow{
-  from{text-shadow:0 0 6px #ff00ff,0 0 18px #ff33ff,0 0 30px #00ffff;}
-  to{text-shadow:0 0 10px #ff33ff,0 0 30px #ff00ff,0 0 40px #00ffff;}
+  from{text-shadow:0 0 6px #ff00ff,0 0 12px #ff66ff,0 0 20px #00ffff;}
+  to{text-shadow:0 0 10px #ff33ff,0 0 25px #00ffff,0 0 40px #ff00ff;}
 }
-@keyframes glowShift{
-  from{text-shadow:0 0 10px #00ffff,0 0 20px #ff00ff,0 0 40px #00ffff;}
-  to{text-shadow:0 0 10px #ff00ff,0 0 25px #00ffff,0 0 50px #ff00ff;}
+@keyframes logoGlow{
+  from{text-shadow:0 0 8px #00ffff,0 0 20px #ff00ff;}
+  to{text-shadow:0 0 10px #ff00ff,0 0 25px #00ffff;}
 }
