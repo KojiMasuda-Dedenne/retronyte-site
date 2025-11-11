@@ -1,33 +1,35 @@
-async function loadLatestVideo() {
+(async () => {
+  console.log("Retronyte script starting...");
   try {
-    // 👇 force fresh fetch so GitHub doesn't cache old JSON
-    const res = await fetch("videos/latest.json?cacheBust=" + Date.now());
-    const data = await res.json();
+    const response = await fetch("videos/latest.json?cache=" + Date.now());
+    console.log("Fetch status:", response.status);
+    const data = await response.json();
+    console.log("Video data fetched:", data);
 
     const wrapper = document.getElementById("video-wrapper");
-    const ticker = document.getElementById("now-playing");
+    const ticker  = document.getElementById("now-playing");
 
-    console.log("Loaded video data:", data); // debug output
+    if (!wrapper || !ticker) {
+      console.error("Missing wrapper or ticker element");
+      return;
+    }
 
     if (data.source === "streamable" && data.id) {
-      wrapper.innerHTML = `
+      const iframeHTML = `
         <iframe
           src="https://streamable.com/e/${data.id}"
           frameborder="0"
           allowfullscreen
-          style="position:absolute;top:0;left:0;width:100%;height:100%;">
+          style="width:100%;height:100%;border-radius:12px;">
         </iframe>`;
-      ticker.textContent = `🎵 Now Playing: ${data.title || "Untitled Video"}`;
+      wrapper.innerHTML = iframeHTML;
+      ticker.textContent = `🎵 Now Playing: ${data.title || "Untitled"}`;
+      console.log("Streamable iframe inserted.");
     } else {
-      wrapper.innerHTML = "<p>⚙️ Streamable data missing or invalid.</p>";
-      ticker.textContent = "⚙️ Unable to load Streamable video.";
+      wrapper.innerHTML = "<p>⚙️ Invalid JSON format.</p>";
+      console.warn("Invalid JSON structure:", data);
     }
   } catch (err) {
-    console.error("Error loading latest video:", err);
-    document.getElementById("video-wrapper").innerHTML =
-      "<p>⚠️ Could not load latest episode.</p>";
+    console.error("Video load error:", err);
   }
-}
-
-// Run the function
-loadLatestVideo();
+})();
