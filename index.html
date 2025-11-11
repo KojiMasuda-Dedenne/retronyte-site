@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Retronyte — Now Playing</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>🎮 RETRONYTE</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#player">Now Playing</a>
+      <a href="#playlist">Episodes</a>
+      <a href="https://discord.gg/YOURSERVER">Join Discord</a>
+    </nav>
+  </header>
+
+  <main id="player">
+    <div class="ticker">
+      <span id="now-playing">Loading latest episode...</span>
+    </div>
+
+    <div id="video-wrapper" class="video-frame">
+      <!-- The Streamable iframe will be inserted here by script.js -->
+    </div>
+  </main>
+
+  <section id="playlist">
+    <h2>Episode Library</h2>
+    <div id="video-grid"></div>
+  </section>
+
+  <footer>
+    <p>© 2025 Retronyte | Developed by Koji Masuda</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
