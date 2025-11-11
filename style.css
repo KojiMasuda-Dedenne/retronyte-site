@@ -1,84 +1,134 @@
-/* === RETRONYTE ARCade STYLE === */
-
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 body {
-  background: radial-gradient(circle at center, #060608 0%, #020204 100%);
-  color: #00ffea;
-  font-family: 'Press Start 2P', monospace;
-  text-align: center;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
+  background: radial-gradient(circle at center,#060608 0%,#020204 100%);
+  color:#00ffea;
+  font-family:'Press Start 2P',monospace;
+  text-align:center;
+  margin:0;
+  overflow-x:hidden;
 }
 
-/* === HEADER + CATCHPHRASE === */
-h1 {
-  font-size: 3rem;
-  margin: 1rem 0 0.5rem;
-  color: #00ffff;
-  text-shadow:
-    0 0 5px #00ffff,
-    0 0 20px #00ffff,
-    0 0 40px #ff00ff;
-  animation: glowShift 3s infinite alternate;
+/* === HEADER / LOGO === */
+.logo{
+  font-size:3rem;
+  margin:1rem 0 .5rem;
+  color:#00ffff;
+  text-shadow:0 0 6px #00ffff,0 0 18px #00ffff,0 0 36px #ff00ff;
+  animation:glowShift 3s infinite alternate;
 }
 
-.catchphrase {
-  font-size: 1.2rem;
-  color: #ff00ff;
-  margin: 0 0 1.5rem;
-  text-shadow:
-    0 0 5px #ff00ff,
-    0 0 15px #ff66ff,
-    0 0 25px #00ffff;
-  letter-spacing: 3px;
-  animation: pulseGlow 2.5s infinite alternate;
+/* === CATCHPHRASE === */
+.catchphrase{
+  font-size:1.1rem;
+  margin:0 0 1.5rem;
+  color:#ff00ff;
+  text-shadow:0 0 6px #ff00ff,0 0 18px #ff33ff,0 0 30px #00ffff;
+  letter-spacing:3px;
+  animation:pulseGlow 2.5s infinite alternate;
 }
 
 /* === NAVIGATION === */
-nav {
-  margin-bottom: 1.5rem;
+nav a{
+  color:#00ffea;
+  margin:0 12px;
+  text-decoration:none;
+  font-size:.8rem;
+  transition:color .3s,text-shadow .3s;
 }
-nav a {
-  color: #00ffea;
-  margin: 0 12px;
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: color 0.3s, text-shadow 0.3s;
-}
-nav a:hover {
-  color: #ff00ff;
-  text-shadow: 0 0 10px #ff00ff;
+nav a:hover{
+  color:#ff00ff;
+  text-shadow:0 0 10px #ff00ff;
 }
 
 /* === HOME SECTION (WIP) === */
-.home-section {
-  background: rgba(10, 10, 20, 0.7);
-  border-top: 2px solid #00ffff;
-  border-bottom: 2px solid #00ffff;
-  padding: 50px 20px;
-  max-width: 1200px;
-  margin: 0 auto 40px;
-  box-shadow: inset 0 0 20px #00ffff;
-  animation: flicker 3s infinite;
+.home-section{
+  background:rgba(10,10,20,.7);
+  border-top:2px solid #00ffff;
+  border-bottom:2px solid #00ffff;
+  padding:50px 20px;
+  max-width:1200px;
+  margin:0 auto 40px;
+  box-shadow:inset 0 0 20px #00ffff;
+  animation:flicker 3s infinite;
 }
-.home-section h2 {
-  color: #ff00ff;
-  font-size: 1.4rem;
-  text-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff;
-  margin-bottom: 10px;
+.home-section h2{
+  color:#ff00ff;
+  font-size:1.4rem;
+  text-shadow:0 0 10px #ff00ff,0 0 20px #00ffff;
 }
-.home-section p {
-  font-size: 1rem;
-  color: #00ffea;
-  text-shadow: 0 0 8px #00ffff;
+.home-section p{
+  color:#00ffea;
+  text-shadow:0 0 8px #00ffff;
+}
+.crt-glow{
+  width:100%;
+  height:5px;
+  background:radial-gradient(circle,#00ffff55 0%,transparent 70%);
+  margin-top:20px;
+  animation:flicker 1.8s infinite;
 }
 
-/* CRT glow flicker accent */
-.crt-glow {
-  width: 100%;
-  height: 5px;
-  background: radial-gradient(circle, #00ffff55 0%, transparent 70%);
-  margin-top: 20px;
-  animation: flicker 1.
+/* === VIDEO FRAME === */
+.video-frame{
+  position:relative;
+  width:80%;
+  max-width:1920px;
+  aspect-ratio:16/9;
+  margin:30px auto;
+  border:3px solid #00ffff;
+  border-radius:12px;
+  box-shadow:0 0 25px #00ffff;
+  background:black;
+  overflow:hidden;
+}
+iframe{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  border:0;
+  border-radius:12px;
+}
+
+/* === TICKER === */
+.ticker{
+  background:#101018;
+  overflow:hidden;
+  white-space:nowrap;
+  box-shadow:inset 0 0 10px #00ffff;
+  color:#00ffea;
+  padding:10px;
+  font-size:.8rem;
+  letter-spacing:1px;
+}
+.ticker span{
+  display:inline-block;
+  animation:scroll 14s linear infinite;
+}
+
+/* === FOOTER === */
+footer{
+  margin-top:3rem;
+  font-size:.7rem;
+  color:#808080;
+  text-shadow:0 0 5px #00ffff33;
+}
+
+/* === ANIMATIONS === */
+@keyframes scroll{
+  0%{transform:translateX(100%)}
+  100%{transform:translateX(-100%)}
+}
+@keyframes flicker{
+  0%,18%,22%,25%,53%,57%,100%{opacity:.8}
+  20%,24%,55%{opacity:.5}
+}
+@keyframes pulseGlow{
+  from{text-shadow:0 0 6px #ff00ff,0 0 18px #ff33ff,0 0 30px #00ffff;}
+  to{text-shadow:0 0 10px #ff33ff,0 0 30px #ff00ff,0 0 40px #00ffff;}
+}
+@keyframes glowShift{
+  from{text-shadow:0 0 10px #00ffff,0 0 20px #ff00ff,0 0 40px #00ffff;}
+  to{text-shadow:0 0 10px #ff00ff,0 0 25px #00ffff,0 0 50px #ff00ff;}
+}
