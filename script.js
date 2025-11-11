@@ -4,7 +4,7 @@
     const data = await res.json();
 
     const wrapper = document.getElementById("video-wrapper");
-    const ticker  = document.getElementById("now-playing");
+    const ticker = document.getElementById("now-playing");
 
     if (data.source === "streamable" && data.id) {
       wrapper.innerHTML = `
