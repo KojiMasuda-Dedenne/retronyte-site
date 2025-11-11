@@ -1,36 +1,84 @@
-/* === RETRONYTE STYLE SHEET === */
+/* === RETRONYTE ARCade STYLE === */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 body {
-  background: linear-gradient(180deg, #0c0c12, #050509);
+  background: radial-gradient(circle at center, #060608 0%, #020204 100%);
   color: #00ffea;
-  font-family: 'VT323', monospace;
-  margin: 0;
+  font-family: 'Press Start 2P', monospace;
   text-align: center;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
+/* === HEADER + CATCHPHRASE === */
 h1 {
   font-size: 3rem;
-  margin-top: 1rem;
-  text-shadow: 0 0 15px #00ffff;
+  margin: 1rem 0 0.5rem;
+  color: #00ffff;
+  text-shadow:
+    0 0 5px #00ffff,
+    0 0 20px #00ffff,
+    0 0 40px #ff00ff;
+  animation: glowShift 3s infinite alternate;
 }
 
+.catchphrase {
+  font-size: 1.2rem;
+  color: #ff00ff;
+  margin: 0 0 1.5rem;
+  text-shadow:
+    0 0 5px #ff00ff,
+    0 0 15px #ff66ff,
+    0 0 25px #00ffff;
+  letter-spacing: 3px;
+  animation: pulseGlow 2.5s infinite alternate;
+}
+
+/* === NAVIGATION === */
+nav {
+  margin-bottom: 1.5rem;
+}
 nav a {
   color: #00ffea;
-  margin: 0 10px;
+  margin: 0 12px;
   text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s, text-shadow 0.3s;
 }
-
 nav a:hover {
   color: #ff00ff;
+  text-shadow: 0 0 10px #ff00ff;
 }
 
-/* === VIDEO PLAYER FRAME === */
+/* === HOME SECTION (WIP) === */
+.home-section {
+  background: rgba(10, 10, 20, 0.7);
+  border-top: 2px solid #00ffff;
+  border-bottom: 2px solid #00ffff;
+  padding: 50px 20px;
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  box-shadow: inset 0 0 20px #00ffff;
+  animation: flicker 3s infinite;
+}
+.home-section h2 {
+  color: #ff00ff;
+  font-size: 1.4rem;
+  text-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff;
+  margin-bottom: 10px;
+}
+.home-section p {
+  font-size: 1rem;
+  color: #00ffea;
+  text-shadow: 0 0 8px #00ffff;
+}
 
-.video-frame {
-  position: relative;
-  width: 1920px;
-  height: 1080px;
-  margin: 20px auto;
-  border: 3px solid #00ffea;
-  border-radius: 12px;
-  box-shadow: 0 0
+/* CRT glow flicker accent */
+.crt-glow {
+  width: 100%;
+  height: 5px;
+  background: radial-gradient(circle, #00ffff55 0%, transparent 70%);
+  margin-top: 20px;
+  animation: flicker 1.
