@@ -14,21 +14,8 @@ async function loadLatestVideo() {
           style="position:absolute;top:0;left:0;width:100%;height:100%;">
         </iframe>`;
       ticker.textContent = `🎵 Now Playing: ${data.title}`;
-    } 
-    else if (data.source === "youtube" || !data.source) {
-      wrapper.innerHTML = `
-        <iframe
-          src="https://www.youtube.com/embed/${data.id}"
-          frameborder="0"
-          allowfullscreen
-          style="position:absolute;top:0;left:0;width:100%;height:100%;">
-        </iframe>`;
-      ticker.textContent = data.title
-        ? `🎵 Now Playing: ${data.title}`
-        : "🎵 Now Playing: Retronyte Episode";
-    } 
-    else {
-      wrapper.innerHTML = "<p>⚠️ No video source found.</p>";
+    } else {
+      wrapper.innerHTML = "<p>⚙️ No Streamable video found.</p>";
     }
   } catch (err) {
     console.error("Error loading latest video:", err);
