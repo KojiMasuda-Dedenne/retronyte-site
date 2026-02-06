@@ -17,7 +17,7 @@ const el = {
   seek: document.getElementById("seek"),
   vol: document.getElementById("vol"),
   curTime: document.getElementById("curTime"),
-  durTime: document.getElementById("durTime"),
+  durTime: document.getElementById("durTime")
 };
 
 let library = null;
@@ -48,14 +48,13 @@ function setPlayingUI(isPlaying) {
 function setStageFade(out) {
   const stage = el.video?.closest(".stage");
   if (!stage) return;
-
   stage.classList.remove("fade-in", "fade-out");
   stage.classList.add(out ? "fade-out" : "fade-in");
 }
 
 function loadVideo(v, autoplay = false) {
   if (!v || !v.src) {
-    setTicker("⚠️ Missing video URL");
+    setTicker("⚠️ Missing video URL in library.json");
     return;
   }
 
@@ -64,20 +63,20 @@ function loadVideo(v, autoplay = false) {
   el.video.pause();
   el.video.src = v.src;
   el.video.poster = v.poster || "";
-  el.video.dataset.resumeTime = "0";
+  el.video.load();
 
   if (el.title) el.title.textContent = v.title || "Retronyte Episode";
-  if (el.ridPill) el.ridPill.textContent = `t`RID: ${v.rid || "—"}`;
+  if (el.ridPill) el.ridPill.textContent = `RID: ${v.rid || "—"}`;
 
-  // Remove "Internet Archive" branding text entirely
-  if (el.sourceLine) el.sourceLine.textContent = "";
+  // No mention of Internet Archive on-page:
+  if (el.sourceLine) el.sourceLine.textContent = "Retronyte Player";
 
   setTicker(`🎵 Now Playing: ${v.title || "Retronyte Episode"}`);
   setURL(v.rid || "latest");
 
+  // Nice transition
   setStageFade(true);
   setTimeout(() => {
-    el.video.load();
     setStageFade(false);
     if (autoplay) el.video.play().catch(() => {});
   }, 140);
@@ -104,7 +103,7 @@ function renderGrid() {
 }
 
 async function init() {
-  setTicker("⚡ Loading Retronyte playlist…");
+  setTicker("⚡ Booting Retronyte playlist…");
 
   const res = await fetch(`${LIBRARY_URL}?cb=${Date.now()}`);
   if (!res.ok) throw new Error(`Failed to fetch ${LIBRARY_URL}: ${res.status}`);
@@ -113,11 +112,11 @@ async function init() {
   if (!library?.videos?.length) throw new Error("library.json has no videos[]");
 
   const rid = new URLSearchParams(location.search).get("v");
-  const found = library.videos.findIndex((v) => v.rid === rid);
+  const found = library.videos.findIndex(v => v.rid === rid);
 
   if (found >= 0) index = found;
   else {
-    const latestIndex = library.videos.findIndex((v) => v.rid === library.latest);
+    const latestIndex = library.videos.findIndex(v => v.rid === library.latest);
     index = latestIndex >= 0 ? latestIndex : 0;
   }
 
@@ -179,7 +178,7 @@ async function init() {
   });
 }
 
-init().catch((err) => {
+init().catch(err => {
   console.error(err);
   setTicker("⚠️ Playlist failed to load");
 });
