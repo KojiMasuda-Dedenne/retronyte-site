@@ -1,184 +1,70 @@
-const LIBRARY_URL = "videos/library.json";
+const video = document.getElementById("video");
+const overlay = document.getElementById("playOverlay");
+const frame = document.querySelector(".player-frame");
+const playBtn = document.getElementById("playBtn");
+const seek = document.getElementById("seek");
+const library = document.getElementById("library");
 
-const el = {
-  video: document.getElementById("video"),
-  now: document.getElementById("now-playing"),
-  title: document.getElementById("title"),
-  ridPill: document.getElementById("ridPill"),
-  grid: document.getElementById("grid"),
-  sourceLine: document.getElementById("sourceLine"),
+const videos = [
+  {
+    title: "Is Greninja ex Actually That Good?",
+    src: "https://ia600607.us.archive.org/24/items/is-greninja-ex-actually-that-good/Is%20Greninja%20ex%20Actually%20That%20Good_.mp4"
+  },
+  {
+    title: "I HATED Crabominable until THIS!",
+    src: "https://archive.org/download/i-hated-crabominable-until-this/I%20HATED%20Crabominable%20until%20THIS!.mp4"
+  }
+];
 
-  btnPlay: document.getElementById("btnPlay"),
-  btnMute: document.getElementById("btnMute"),
-  btnPrev: document.getElementById("btnPrev"),
-  btnNext: document.getElementById("btnNext"),
-  btnFs: document.getElementById("btnFs"),
+/* BOOT */
+setTimeout(()=>{
+  document.body.classList.remove("booting");
+  document.getElementById("boot").remove();
+  document.getElementById("app").hidden = false;
+}, 2600);
 
-  seek: document.getElementById("seek"),
-  vol: document.getElementById("vol"),
-  curTime: document.getElementById("curTime"),
-  durTime: document.getElementById("durTime")
+/* PLAYER */
+function loadVideo(v){
+  video.pause();
+  video.src = v.src;
+  video.load();
+  overlay.style.display = "flex";
+  frame.classList.remove("playing");
+}
+
+overlay.onclick = ()=>{
+  video.play();
 };
 
-let library = null;
-let index = 0;
+video.onplay = ()=>{
+  overlay.style.display = "none";
+  frame.classList.add("playing");
+};
 
-function fmt(t) {
-  if (!isFinite(t)) return "0:00";
-  const m = Math.floor(t / 60);
-  const s = Math.floor(t % 60).toString().padStart(2, "0");
-  return `${m}:${s}`;
-}
+video.onpause = ()=>{
+  overlay.style.display = "flex";
+  frame.classList.remove("playing");
+};
 
-function setTicker(text) {
-  if (!el.now) return;
-  el.now.textContent = `${text} • ${text} • ${text}`;
-}
+video.ontimeupdate = ()=>{
+  seek.value = (video.currentTime / video.duration) * 100 || 0;
+};
 
-function setURL(rid) {
-  const u = new URL(location.href);
-  u.searchParams.set("v", rid);
-  history.replaceState(null, "", u.toString());
-}
+seek.oninput = ()=>{
+  video.currentTime = (seek.value / 100) * video.duration;
+};
 
-function setPlayingUI(isPlaying) {
-  document.body.classList.toggle("playing", !!isPlaying);
-}
+playBtn.onclick = ()=>{
+  video.paused ? video.play() : video.pause();
+};
 
-function setStageFade(out) {
-  const stage = el.video?.closest(".stage");
-  if (!stage) return;
-  stage.classList.remove("fade-in", "fade-out");
-  stage.classList.add(out ? "fade-out" : "fade-in");
-}
-
-function loadVideo(v, autoplay = false) {
-  if (!v || !v.src) {
-    setTicker("⚠️ Missing video URL in library.json");
-    return;
-  }
-
-  setPlayingUI(false);
-
-  el.video.pause();
-  el.video.src = v.src;
-  el.video.poster = v.poster || "";
-  el.video.load();
-
-  if (el.title) el.title.textContent = v.title || "Retronyte Episode";
-  if (el.ridPill) el.ridPill.textContent = `RID: ${v.rid || "—"}`;
-
-  // No mention of Internet Archive on-page:
-  if (el.sourceLine) el.sourceLine.textContent = "Retronyte Player";
-
-  setTicker(`🎵 Now Playing: ${v.title || "Retronyte Episode"}`);
-  setURL(v.rid || "latest");
-
-  // Nice transition
-  setStageFade(true);
-  setTimeout(() => {
-    setStageFade(false);
-    if (autoplay) el.video.play().catch(() => {});
-  }, 140);
-}
-
-function renderGrid() {
-  if (!el.grid || !library?.videos) return;
-  el.grid.innerHTML = "";
-
-  library.videos.forEach((v, i) => {
-    const card = document.createElement("div");
-    card.className = "card" + (i === index ? " active" : "");
-    card.innerHTML = `
-      <div class="ctitle">${v.title || "Untitled Episode"}</div>
-      <div class="crid">RID: ${v.rid || "—"}</div>
-    `;
-    card.addEventListener("click", () => {
-      index = i;
-      loadVideo(library.videos[index], true);
-      renderGrid();
-    });
-    el.grid.appendChild(card);
-  });
-}
-
-async function init() {
-  setTicker("⚡ Booting Retronyte playlist…");
-
-  const res = await fetch(`${LIBRARY_URL}?cb=${Date.now()}`);
-  if (!res.ok) throw new Error(`Failed to fetch ${LIBRARY_URL}: ${res.status}`);
-
-  library = await res.json();
-  if (!library?.videos?.length) throw new Error("library.json has no videos[]");
-
-  const rid = new URLSearchParams(location.search).get("v");
-  const found = library.videos.findIndex(v => v.rid === rid);
-
-  if (found >= 0) index = found;
-  else {
-    const latestIndex = library.videos.findIndex(v => v.rid === library.latest);
-    index = latestIndex >= 0 ? latestIndex : 0;
-  }
-
-  loadVideo(library.videos[index], false);
-  renderGrid();
-
-  // Lightning only while playing
-  el.video.addEventListener("play", () => setPlayingUI(true));
-  el.video.addEventListener("pause", () => setPlayingUI(false));
-  el.video.addEventListener("ended", () => setPlayingUI(false));
-
-  // Controls
-  el.btnPlay?.addEventListener("click", () => {
-    if (el.video.paused) el.video.play().catch(() => {});
-    else el.video.pause();
-  });
-
-  el.btnMute?.addEventListener("click", () => {
-    el.video.muted = !el.video.muted;
-    el.btnMute.textContent = el.video.muted ? "🔇" : "🔊";
-  });
-
-  el.vol?.addEventListener("input", () => {
-    el.video.volume = Number(el.vol.value);
-  });
-
-  el.btnPrev?.addEventListener("click", () => {
-    index = Math.max(0, index - 1);
-    loadVideo(library.videos[index], true);
-    renderGrid();
-  });
-
-  el.btnNext?.addEventListener("click", () => {
-    index = Math.min(library.videos.length - 1, index + 1);
-    loadVideo(library.videos[index], true);
-    renderGrid();
-  });
-
-  el.btnFs?.addEventListener("click", () => {
-    el.video.closest(".stage")?.requestFullscreen?.();
-  });
-
-  // Seek + time
-  el.video.addEventListener("loadedmetadata", () => {
-    if (el.durTime) el.durTime.textContent = fmt(el.video.duration);
-  });
-
-  el.video.addEventListener("timeupdate", () => {
-    if (el.curTime) el.curTime.textContent = fmt(el.video.currentTime);
-    if (isFinite(el.video.duration) && el.video.duration > 0 && el.seek) {
-      el.seek.value = String(Math.floor((el.video.currentTime / el.video.duration) * 1000));
-    }
-  });
-
-  el.seek?.addEventListener("input", () => {
-    if (!isFinite(el.video.duration) || el.video.duration <= 0) return;
-    const pct = Number(el.seek.value) / 1000;
-    el.video.currentTime = pct * el.video.duration;
-  });
-}
-
-init().catch(err => {
-  console.error(err);
-  setTicker("⚠️ Playlist failed to load");
+/* LIBRARY */
+videos.forEach(v=>{
+  const b = document.createElement("button");
+  b.textContent = v.title;
+  b.onclick = ()=>loadVideo(v);
+  library.appendChild(b);
 });
+
+/* LOAD FIRST */
+loadVideo(videos[0]);

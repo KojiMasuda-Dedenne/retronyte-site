@@ -1,331 +1,151 @@
-@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
-
-:root {
-  --cyan:#00ffff;
-  --mag:#ff00ff;
-  --bg1:#07070d;
-  --bg2:#020204;
-  --text:#00ffee;
-  --panel:rgba(10,10,20,.75);
-  --muted:#8a8a8a;
-}
-
+/* =====================
+   GLOBAL
+   ===================== */
 body{
   margin:0;
-  background:radial-gradient(circle,var(--bg1),var(--bg2));
-  font-family:"Press Start 2P", monospace;
-  color:var(--text);
-  text-align:center;
-  overflow-x:hidden;
-}
-
-/* =========================
-   HEADER (CRT vibes)
-========================= */
-header{ position:relative; }
-
-header::after{
-  content:"";
-  position:absolute; inset:0;
-  pointer-events:none;
-  background:repeating-linear-gradient(
-    to bottom,
-    rgba(0,255,255,0.05),
-    rgba(0,255,255,0.05) 1px,
-    transparent 3px,
-    transparent 7px
-  );
-  opacity:.25;
-  animation:headerScan 5s linear infinite;
-}
-
-.logo{
-  font-size:2.6rem;
-  margin:1.4rem 0 .35rem;
-  color:var(--cyan);
-  text-shadow:0 0 12px var(--cyan),0 0 26px var(--mag);
-  animation:headerFlicker 3.2s infinite;
-}
-
-.catchphrase{
-  margin:0 0 1.1rem;
-  color:var(--mag);
-  text-shadow:0 0 10px var(--mag),0 0 18px var(--cyan);
-  animation:headerFlicker 4s infinite;
-}
-
-@keyframes headerScan{
-  0%{ transform:translateY(-10px); }
-  100%{ transform:translateY(10px); }
-}
-
-@keyframes headerFlicker{
-  0%,19%,22%,62%,64%,100%{ opacity:1; }
-  20%,63%{ opacity:.78; }
-}
-
-/* =========================
-   HOME PANEL (flicker)
-========================= */
-.home-section{
-  max-width:980px;
-  margin:0 auto 30px;
-  padding:36px 20px;
-  background:var(--panel);
-  border-top:2px solid var(--cyan);
-  border-bottom:2px solid var(--cyan);
-  box-shadow:inset 0 0 18px rgba(0,255,255,.35);
-  animation:panelFlicker 3.1s infinite;
-}
-
-@keyframes panelFlicker{
-  0%,18%,22%,25%,53%,57%,100%{opacity:.92;}
-  20%,24%,55%{opacity:.62;}
-}
-
-/* =========================
-   PLAYER SHELL
-========================= */
-.player-shell{
-  max-width:980px;
-  margin:0 auto;
-  padding:0 10px;
-}
-
-/* Now Playing ticker */
-.ticker{
+  background:#000;
+  color:#0ff;
+  font-family: monospace;
   overflow:hidden;
-  white-space:nowrap;
-  padding:8px 10px;
-  border-top:2px solid var(--cyan);
-  border-bottom:2px solid var(--cyan);
-  background:rgba(0,0,0,.35);
-  box-shadow:inset 0 0 10px rgba(0,255,255,.25);
 }
 
-.ticker span{
-  display:inline-block;
-  animation:scroll 14s linear infinite;
-}
-
-@keyframes scroll{
-  from{transform:translateX(100%);}
-  to{transform:translateX(-100%);}
-}
-
-/* =========================
-   LIGHTNING FRAME
-   (ONLY while playing)
-========================= */
-.lightning-frame{
-  position:relative;
-  padding:10px;
-  border-radius:18px;
-}
-
-/* default OFF */
-.lightning-frame::before,
-.lightning-frame::after{
-  content:"";
-  position:absolute;
+/* =====================
+   BOOT SEQUENCE
+   ===================== */
+#boot{
+  position:fixed;
   inset:0;
-  border-radius:18px;
-  pointer-events:none;
-  opacity:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  background:#000;
+  z-index:10;
 }
 
-/* ON while playing */
-body.playing .lightning-frame{
-  filter: drop-shadow(0 0 34px rgba(0,255,255,.85));
+.boot-logo img{
+  width:320px;
+  animation: logoFlicker 2.2s infinite;
 }
 
-body.playing .lightning-frame::before{
-  opacity:1;
-  border:3px solid transparent;
-  background:linear-gradient(120deg,var(--cyan),var(--mag),var(--cyan)) border-box;
-  mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  animation: lightningPulseStrong 1.2s infinite;
+.boot-tagline{
+  display:flex;
+  gap:18px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
 }
 
-body.playing .lightning-frame::after{
-  opacity:.9;
-  inset:4px;
-  border-radius:14px;
-  border:2px dashed rgba(0,255,255,.95);
-  animation: lightningFlicker .09s infinite alternate;
+.boot-tagline span{
+  color:#ff00ff;
+  text-shadow:0 0 10px #ff00ff, 0 0 18px #0ff;
+  animation: taglineFlicker 1.6s infinite steps(1);
 }
 
-@keyframes lightningPulseStrong{
-  0%   { opacity:.55; filter: blur(0px); }
-  50%  { opacity:1;   filter: blur(.6px); }
-  100% { opacity:.55; filter: blur(0px); }
+.boot-tagline span:nth-child(2){ animation-delay:.2s }
+.boot-tagline span:nth-child(3){ animation-delay:.4s }
+
+.boot-insert{
+  margin-top:12px;
+  color:#0ff;
+  animation: blink 1s infinite steps(1);
 }
 
-@keyframes lightningFlicker{
-  from{ opacity:.35; }
-  to{ opacity:.95; }
+/* =====================
+   APP
+   ===================== */
+#app{
+  padding:20px;
 }
 
-/* =========================
-   STAGE / VIDEO
-========================= */
-.stage{
+.header{
+  text-align:center;
+  font-size:1.4rem;
+  text-shadow:0 0 10px #0ff;
+}
+
+.player-shell{
+  max-width:860px;
+  margin:30px auto;
+}
+
+.player-frame{
   position:relative;
   aspect-ratio:16/9;
-  background:black;
-  border-radius:14px;
-  overflow:hidden;
+  border:2px solid #0ff;
+  box-shadow:0 0 18px #0ff;
 }
 
-/* Episode switch transitions (JS toggles these) */
-.stage.fade-out{
-  opacity:0;
-  transform:scale(.995);
-  transition: opacity .22s ease, transform .22s ease;
-}
-.stage.fade-in{
-  opacity:1;
-  transform:scale(1);
-  transition: opacity .22s ease, transform .22s ease;
+.player-frame.playing{
+  animation: lightningPulse .9s infinite;
 }
 
-.video{
+video{
   width:100%;
   height:100%;
-  display:block;
-  background:black;
+  background:#000;
 }
 
-/* Scanlines overlay */
-.scanlines{
+.play-overlay{
   position:absolute;
   inset:0;
-  pointer-events:none;
-  background:repeating-linear-gradient(
-    to bottom,
-    rgba(0,255,255,0.06),
-    rgba(0,255,255,0.06) 1px,
-    transparent 3px,
-    transparent 6px
-  );
-  opacity:.25;
-  mix-blend-mode:screen;
-  animation:scan 6s linear infinite;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:2rem;
+  color:#ff00ff;
+  background:rgba(0,0,0,.35);
+  text-shadow:0 0 12px #ff00ff;
+  cursor:pointer;
+  animation: blink 1.4s infinite steps(1);
 }
 
-@keyframes scan{
-  0%{transform:translateY(-8px)}
-  100%{transform:translateY(8px)}
-}
-
-/* Arcade PLAY overlay when paused/not playing */
-body:not(.playing) .stage::after{
-  content:"▶ PLAY";
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  padding:14px 18px;
-  border:2px solid var(--mag);
-  border-radius:14px;
-  background:rgba(0,0,0,.55);
-  color:var(--mag);
-  text-shadow:0 0 10px var(--mag), 0 0 14px var(--cyan);
-  box-shadow:0 0 18px rgba(255,0,255,.35);
-  font-size:0.9rem;
-  letter-spacing:1px;
-  pointer-events:none;
-  animation:playPulse 1.4s infinite;
-}
-
-@keyframes playPulse{
-  0%,100%{ opacity:.75; transform:translate(-50%,-50%) scale(1); }
-  50%{ opacity:1; transform:translate(-50%,-50%) scale(1.03); }
-}
-
-/* =========================
-   CONTROLS
-========================= */
 .controls{
-  position:absolute;
-  left:0; right:0; bottom:0;
   display:flex;
   gap:10px;
-  align-items:center;
-  padding:10px;
-  background:linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,0));
+  margin-top:10px;
 }
 
-.btn{
-  font-family:inherit;
-  font-size:.75rem;
-  padding:8px 10px;
-  color:var(--text);
-  background:rgba(10,10,20,.65);
-  border:2px solid var(--cyan);
-  border-radius:10px;
-  cursor:pointer;
-}
-
-.btn:hover{
-  border-color:var(--mag);
-  box-shadow:0 0 12px rgba(255,0,255,.35);
-}
-
-.seek{ flex:1; accent-color:var(--mag); }
-.vol{ width:110px; accent-color:var(--cyan); }
-.time{ font-size:.65rem; color:var(--text); }
-
-/* =========================
-   META + PLAYLIST
-========================= */
-.meta{
+.library{
   display:flex;
-  justify-content:space-between;
-  align-items:center;
   gap:12px;
-  padding:12px 6px 18px;
+  justify-content:center;
+  margin-top:30px;
 }
 
-.meta-sub{ font-size:.65rem; color:var(--muted); }
-
-.pill{
-  font-size:.65rem;
-  padding:8px 10px;
-  border:2px solid var(--mag);
-  border-radius:999px;
-  color:#ffd6ff;
-  box-shadow:0 0 12px rgba(255,0,255,.25);
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
-  gap:14px;
-  margin-bottom:40px;
-}
-
-.card{
-  text-align:left;
-  border:2px solid var(--cyan);
-  border-radius:14px;
-  background:rgba(10,10,20,.75);
-  padding:12px;
+.library button{
+  background:#000;
+  color:#0ff;
+  border:1px solid #0ff;
+  padding:6px 10px;
   cursor:pointer;
 }
 
-.card.active{ border-color:var(--mag); }
+/* =====================
+   ANIMATIONS
+   ===================== */
+@keyframes logoFlicker{
+  0%,100%{opacity:1}
+  6%{opacity:.7}
+  8%{opacity:1}
+  42%{opacity:.6}
+  45%{opacity:1}
+}
 
-.card .ctitle{ font-size:.75rem; margin-bottom:8px; }
-.card .crid{ font-size:.6rem; color:var(--muted); }
+@keyframes taglineFlicker{
+  0%{opacity:1}
+  14%{opacity:.6}
+  18%{opacity:1}
+  70%{opacity:.5}
+  74%{opacity:1}
+}
 
-/* =========================
-   FOOTER
-========================= */
-footer{
-  margin:26px 0 18px;
-  font-size:.7rem;
-  color:var(--muted);
+@keyframes blink{
+  50%{opacity:.4}
+}
+
+@keyframes lightningPulse{
+  0%{box-shadow:0 0 14px #0ff}
+  50%{box-shadow:0 0 26px #ff00ff}
+  100%{box-shadow:0 0 14px #0ff}
 }
