@@ -3,54 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <title>Retronyte</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body class="booting">
 
-  <!-- BOOT SCREEN -->
-  <div id="boot">
-    <div class="boot-logo">
-      <img src="logo.png" alt="Retronyte Logo" />
-    </div>
+<!-- BOOT SCREEN -->
+<div id="boot">
+  <img src="assets/logo.png" class="boot-logo" alt="Retronyte Logo" />
 
-    <div class="boot-tagline">
-      <span>Plug In</span>
-      <span>Power Up</span>
-      <span>Play On</span>
-    </div>
-
-    <div class="boot-insert">
-      INSERT CARTRIDGE
-    </div>
+  <div class="boot-tagline">
+    <span>Plug In</span>
+    <span>Power Up</span>
+    <span>Play On</span>
   </div>
 
-  <!-- MAIN APP -->
-  <main id="app" hidden>
+  <div class="boot-insert">INSERT CARTRIDGE</div>
+</div>
 
-    <header class="header">
-      <h1>RETRONYTE</h1>
-    </header>
+<!-- MAIN APP -->
+<div id="app" hidden>
+  <header class="site-header">
+    <h1>RETRONYTE</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="https://discord.gg/juqwaTpX" target="_blank">Join Discord</a>
+    </nav>
+  </header>
 
-    <section class="player-shell">
-      <div class="player-frame">
-        <video id="video" preload="metadata" playsinline></video>
+  <main>
+    <section id="player-shell">
+      <video id="video" playsinline preload="metadata"></video>
 
-        <div class="play-overlay" id="playOverlay">
-          ▶ PLAY
-        </div>
-      </div>
-
-      <div class="controls">
-        <button id="playBtn">▶</button>
-        <input id="seek" type="range" min="0" max="100" value="0" />
-      </div>
+      <button id="overlay-play">▶ PLAY</button>
     </section>
 
-    <section class="library" id="library"></section>
-
+    <h2>Episode Library</h2>
+    <div id="episode-list"></div>
   </main>
+</div>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
