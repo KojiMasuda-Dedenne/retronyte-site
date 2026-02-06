@@ -1,151 +1,355 @@
-/* =====================
-   GLOBAL
-   ===================== */
-body{
-  margin:0;
-  background:#000;
-  color:#0ff;
-  font-family: monospace;
-  overflow:hidden;
+:root{
+  --bg:#050608;
+  --teal:#28f1ff;
+  --cyan:#00d7ff;
+  --pink:#ff3cff;
+
+  /* Your lightning PNG path */
+  --lightningFrameUrl: url("./assets/lightning-frame.png");
 }
 
-/* =====================
-   BOOT SEQUENCE
-   ===================== */
-#boot{
-  position:fixed;
-  inset:0;
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  background: radial-gradient(1200px 700px at 50% 20%, #0a0f16 0%, var(--bg) 55%, #000 100%);
+  color: var(--teal);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+
+/* ===== Boot ===== */
+.boot{
+  position: sticky;
+  top:0;
+  z-index:999;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding: 20px 14px;
+  background: linear-gradient(to bottom, rgba(0,0,0,.85), rgba(0,0,0,.35));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(40,241,255,.15);
+}
+.boot-inner{
+  width:min(980px, 96vw);
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
-  gap:18px;
-  background:#000;
-  z-index:10;
+  gap:10px;
+  padding: 14px 14px 18px;
+  border: 1px solid rgba(40,241,255,.18);
+  border-radius: 14px;
+  background: rgba(0,0,0,.45);
+  box-shadow: 0 0 40px rgba(0,215,255,.08);
 }
-
-.boot-logo img{
-  width:320px;
-  animation: logoFlicker 2.2s infinite;
+.boot-logo{
+  width: 240px;
+  max-width: 70vw;
+  filter: drop-shadow(0 0 12px rgba(255,60,255,.18)) drop-shadow(0 0 16px rgba(0,215,255,.18));
 }
-
 .boot-tagline{
   display:flex;
-  gap:18px;
-  letter-spacing:.2em;
+  gap:10px;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  letter-spacing:.12em;
   text-transform:uppercase;
+  font-size: 13px;
+  color: var(--pink);
+}
+.boot-tagline .dot{ color: rgba(40,241,255,.55); }
+
+.insert-btn{
+  margin-top:6px;
+  border: 1px solid rgba(40,241,255,.3);
+  color: var(--cyan);
+  background: rgba(0,0,0,.55);
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight:800;
+  letter-spacing:.18em;
+  cursor:pointer;
+  text-transform:uppercase;
+  box-shadow: 0 0 18px rgba(0,215,255,.08);
+}
+.insert-btn:hover{ transform: translateY(-1px); }
+.insert-btn:active{ transform: translateY(0px); }
+
+.topnav{
+  display:flex;
+  gap:18px;
+  font-size:12px;
+}
+.topnav a{
+  color: rgba(40,241,255,.9);
+  text-decoration:none;
+  border-bottom: 1px dotted rgba(255,60,255,.45);
+}
+.topnav a:hover{ color: var(--pink); }
+
+/* collapse boot into header after “insert cartridge” */
+body.boot-done .boot-inner{
+  flex-direction:row;
+  justify-content:space-between;
+  align-items:center;
+  gap:18px;
+  padding: 10px 12px;
+}
+body.boot-done .boot-logo{ width: 120px; }
+body.boot-done .insert-btn{ display:none; }
+body.boot-done .boot-tagline{ font-size:12px; }
+
+/* Flicker */
+@keyframes flicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity:1; filter:none; }
+  20%, 24%, 55% { opacity:.55; filter:brightness(1.35); }
+}
+.flicker-a{ animation:flicker 2.7s infinite; }
+.flicker-b{ animation:flicker 3.1s infinite; }
+.flicker-c{ animation:flicker 2.9s infinite; }
+
+/* ===== Page ===== */
+.wrap{
+  width:min(980px, 96vw);
+  margin: 16px auto 60px;
+}
+.panel{
+  border:1px solid rgba(40,241,255,.16);
+  border-radius:14px;
+  background: rgba(0,0,0,.35);
+  padding: 16px 18px;
+  box-shadow: 0 0 35px rgba(0,215,255,.06);
+}
+.panel-title{
+  margin:0;
+  color: var(--teal);
+  text-shadow: 0 0 16px rgba(0,215,255,.25);
+  letter-spacing:.08em;
+}
+.panel-sub{
+  margin:8px 0 0;
+  color: rgba(40,241,255,.75);
 }
 
-.boot-tagline span{
-  color:#ff00ff;
-  text-shadow:0 0 10px #ff00ff, 0 0 18px #0ff;
-  animation: taglineFlicker 1.6s infinite steps(1);
-}
+.player-area{ margin-top: 16px; }
 
-.boot-tagline span:nth-child(2){ animation-delay:.2s }
-.boot-tagline span:nth-child(3){ animation-delay:.4s }
-
-.boot-insert{
-  margin-top:12px;
-  color:#0ff;
-  animation: blink 1s infinite steps(1);
-}
-
-/* =====================
-   APP
-   ===================== */
-#app{
-  padding:20px;
-}
-
-.header{
-  text-align:center;
-  font-size:1.4rem;
-  text-shadow:0 0 10px #0ff;
-}
-
-.player-shell{
-  max-width:860px;
-  margin:30px auto;
-}
-
-.player-frame{
+/* ticker */
+.ticker{
+  border:1px solid rgba(40,241,255,.18);
+  border-radius:10px;
+  padding:8px 12px;
+  background: rgba(0,0,0,.35);
+  color: rgba(40,241,255,.95);
+  white-space: nowrap;
+  overflow:hidden;
   position:relative;
-  aspect-ratio:16/9;
-  border:2px solid #0ff;
-  box-shadow:0 0 18px #0ff;
+}
+.ticker::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.9) 94%);
+  pointer-events:none;
+}
+.ticker span{
+  display:inline-block;
+  padding-left: 100%;
+  animation: marquee 14s linear infinite;
+}
+@keyframes marquee { from{ transform:translateX(0);} to{ transform:translateX(-100%);} }
+
+/* ===== Player Shell ===== */
+.player-shell{
+  margin-top: 10px;
+  border-radius: 16px;
+  background: rgba(0,0,0,.35);
+  padding: 12px;
+  border: 1px solid rgba(40,241,255,.18);
 }
 
-.player-frame.playing{
-  animation: lightningPulse .9s infinite;
+/* THIS is the frame container */
+.lightning-frame{
+  position: relative;
+  border-radius: 14px;
+  padding: 10px; /* space for frame overlay edges */
+  background: rgba(0,0,0,.25);
 }
 
-video{
+/* Your PNG frame overlay (always visible, calm when paused) */
+.lightning-frame::before{
+  content:"";
+  position:absolute;
+  inset:-4px; /* slightly bigger than container */
+  background-image: var(--lightningFrameUrl);
+  background-size: 100% 100%;
+  background-repeat:no-repeat;
+  opacity: .70;
+  pointer-events:none;
+  filter: drop-shadow(0 0 18px rgba(255, 255, 120, .28));
+  mix-blend-mode: screen;
+  transform: translateZ(0);
+}
+
+/* SHIMMER layer (ONLY while playing) */
+.lightning-frame::after{
+  content:"";
+  position:absolute;
+  inset:-6px;
+  background-image: var(--lightningFrameUrl);
+  background-size: 110% 110%;
+  background-repeat:no-repeat;
+  opacity: 0;
+  pointer-events:none;
+  mix-blend-mode: screen;
+  filter: blur(.2px) drop-shadow(0 0 22px rgba(255,255,160,.40));
+  transform: translateZ(0);
+}
+
+/* Animate ONLY while playing */
+body.playing .lightning-frame::before{
+  animation: framePulse 1.25s ease-in-out infinite;
+}
+body.playing .lightning-frame::after{
+  opacity: .55;
+  animation: frameShimmer 1.05s linear infinite;
+}
+
+/* Calm when paused */
+body:not(.playing) .lightning-frame::before{
+  animation: none;
+  opacity: .55;
+}
+body:not(.playing) .lightning-frame::after{
+  opacity: 0;
+  animation: none;
+}
+
+@keyframes framePulse{
+  0%,100%{ opacity:.62; filter: drop-shadow(0 0 14px rgba(255,255,120,.22)); }
+  50%{ opacity:.92; filter: drop-shadow(0 0 26px rgba(255,255,170,.45)); }
+}
+@keyframes frameShimmer{
+  0%{ transform: translate(-1px,-1px) scale(1.01); filter: blur(.2px) brightness(1.0); }
+  50%{ transform: translate(1px,1px) scale(1.02); filter: blur(.3px) brightness(1.35); }
+  100%{ transform: translate(-1px,1px) scale(1.01); filter: blur(.2px) brightness(1.05); }
+}
+
+.stage{
+  position:relative;
+  border-radius: 12px;
+  overflow:hidden;
+  background:#000;
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgba(40,241,255,.20);
+  box-shadow: 0 0 22px rgba(0,215,255,.08);
+}
+
+.video{
   width:100%;
   height:100%;
+  display:block;
+  object-fit: contain;
   background:#000;
 }
 
-.play-overlay{
+/* overlay play button */
+.overlay-play{
   position:absolute;
   inset:0;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:2rem;
-  color:#ff00ff;
-  background:rgba(0,0,0,.35);
-  text-shadow:0 0 12px #ff00ff;
+  border:none;
+  background: rgba(0,0,0,.18);
+  color: var(--pink);
+  font-weight:900;
+  letter-spacing:.22em;
   cursor:pointer;
-  animation: blink 1.4s infinite steps(1);
+  text-transform:uppercase;
+  opacity:0;
+  pointer-events:none;
+  text-shadow: 0 0 18px rgba(255,60,255,.35);
+}
+.overlay-play::before{
+  content:"";
+  width: 120px;
+  height: 54px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,60,255,.45);
+  box-shadow: 0 0 18px rgba(255,60,255,.20);
+  position:absolute;
 }
 
-.controls{
-  display:flex;
-  gap:10px;
+/* show overlay whenever NOT playing */
+body:not(.playing) .overlay-play{
+  opacity:1;
+  pointer-events:auto;
+}
+
+/* meta */
+.meta{
   margin-top:10px;
-}
-
-.library{
   display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
   gap:12px;
-  justify-content:center;
-  margin-top:30px;
+}
+.title{
+  font-weight:900;
+  color: var(--teal);
+  letter-spacing:.06em;
+  text-shadow: 0 0 16px rgba(0,215,255,.18);
+}
+.sub{
+  font-size:12px;
+  color: rgba(40,241,255,.6);
+}
+.rid-pill{
+  font-size:12px;
+  color: rgba(255,60,255,.95);
+  border: 1px solid rgba(255,60,255,.35);
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.35);
 }
 
-.library button{
-  background:#000;
-  color:#0ff;
-  border:1px solid #0ff;
-  padding:6px 10px;
+/* library */
+.library-title{
+  margin: 18px 0 10px;
+  color: var(--teal);
+  letter-spacing:.10em;
+  text-shadow: 0 0 16px rgba(0,215,255,.20);
+}
+.grid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.card{
+  width: 260px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,60,255,.25);
+  background: rgba(0,0,0,.35);
+  padding: 10px 12px;
   cursor:pointer;
 }
-
-/* =====================
-   ANIMATIONS
-   ===================== */
-@keyframes logoFlicker{
-  0%,100%{opacity:1}
-  6%{opacity:.7}
-  8%{opacity:1}
-  42%{opacity:.6}
-  45%{opacity:1}
+.card:hover{
+  border-color: rgba(40,241,255,.35);
+  transform: translateY(-1px);
+}
+.card .ctitle{
+  color: rgba(40,241,255,.95);
+  font-weight:800;
+  font-size: 13px;
+}
+.card .crid{
+  margin-top:4px;
+  font-size: 11px;
+  color: rgba(255,60,255,.8);
 }
 
-@keyframes taglineFlicker{
-  0%{opacity:1}
-  14%{opacity:.6}
-  18%{opacity:1}
-  70%{opacity:.5}
-  74%{opacity:1}
-}
-
-@keyframes blink{
-  50%{opacity:.4}
-}
-
-@keyframes lightningPulse{
-  0%{box-shadow:0 0 14px #0ff}
-  50%{box-shadow:0 0 26px #ff00ff}
-  100%{box-shadow:0 0 14px #0ff}
+@media (max-width:600px){
+  .card{ width: 100%; }
+  body.boot-done .boot-tagline{ display:none; }
 }

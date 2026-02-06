@@ -1,48 +1,71 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Retronyte</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="./style.css?v=20260206b" />
 </head>
-<body class="booting">
+<body>
 
-<!-- BOOT SCREEN -->
-<div id="boot">
-  <img src="assets/logo.png" class="boot-logo" alt="Retronyte Logo" />
+  <!-- BOOT / HERO (stays, collapses into header on click) -->
+  <section id="boot" class="boot">
+    <div class="boot-inner">
+      <img class="boot-logo" src="./assets/logo.png" alt="Retronyte Logo" />
+      <div class="boot-tagline">
+        <span class="tag flicker-a">PLUG IN</span>
+        <span class="dot">•</span>
+        <span class="tag flicker-b">POWER UP</span>
+        <span class="dot">•</span>
+        <span class="tag flicker-c">PLAY ON</span>
+      </div>
 
-  <div class="boot-tagline">
-    <span>Plug In</span>
-    <span>Power Up</span>
-    <span>Play On</span>
-  </div>
+      <button id="insertBtn" class="insert-btn" type="button">
+        INSERT CARTRIDGE
+      </button>
 
-  <div class="boot-insert">INSERT CARTRIDGE</div>
-</div>
+      <nav class="topnav">
+        <a href="#home">Home</a>
+        <a href="https://discord.gg/juqwaTpX" target="_blank" rel="noreferrer">Join Discord</a>
+      </nav>
+    </div>
+  </section>
 
-<!-- MAIN APP -->
-<div id="app" hidden>
-  <header class="site-header">
-    <h1>RETRONYTE</h1>
-    <nav>
-      <a href="#">Home</a>
-      <a href="https://discord.gg/juqwaTpX" target="_blank">Join Discord</a>
-    </nav>
-  </header>
-
-  <main>
-    <section id="player-shell">
-      <video id="video" playsinline preload="metadata"></video>
-
-      <button id="overlay-play">▶ PLAY</button>
+  <main id="home" class="wrap">
+    <section class="panel">
+      <h2 class="panel-title">Retronyte Online</h2>
+      <p class="panel-sub">Featured episodes playable directly on Retronyte.</p>
     </section>
 
-    <h2>Episode Library</h2>
-    <div id="episode-list"></div>
-  </main>
-</div>
+    <section class="player-area">
+      <div id="ticker" class="ticker">Loading playlist…</div>
 
-<script src="script.js"></script>
+      <div id="playerShell" class="player-shell">
+        <div id="lightningFrame" class="lightning-frame">
+          <div class="stage">
+            <video id="video" class="video" playsinline preload="metadata"></video>
+
+            <!-- Play overlay -->
+            <button id="overlayPlay" class="overlay-play" type="button" aria-label="Play">
+              ▶ PLAY
+            </button>
+          </div>
+        </div>
+
+        <div class="meta">
+          <div>
+            <div id="title" class="title">—</div>
+            <div class="sub">Retronyte Player</div>
+          </div>
+          <div id="ridPill" class="rid-pill">RID: —</div>
+        </div>
+      </div>
+
+      <h3 class="library-title">Episode Library</h3>
+      <div id="grid" class="grid"></div>
+    </section>
+  </main>
+
+  <script src="./script.js?v=20260206b"></script>
 </body>
 </html>
