@@ -6,6 +6,7 @@ const el = {
   title: document.getElementById("title"),
   ridPill: document.getElementById("ridPill"),
   grid: document.getElementById("grid"),
+  sourceLine: document.getElementById("sourceLine"),
 
   btnPlay: document.getElementById("btnPlay"),
   btnMute: document.getElementById("btnMute"),
@@ -16,7 +17,7 @@ const el = {
   seek: document.getElementById("seek"),
   vol: document.getElementById("vol"),
   curTime: document.getElementById("curTime"),
-  durTime: document.getElementById("durTime")
+  durTime: document.getElementById("durTime"),
 };
 
 let library = null;
@@ -44,6 +45,14 @@ function setPlayingUI(isPlaying) {
   document.body.classList.toggle("playing", !!isPlaying);
 }
 
+function setStageFade(out) {
+  const stage = el.video?.closest(".stage");
+  if (!stage) return;
+
+  stage.classList.remove("fade-in", "fade-out");
+  stage.classList.add(out ? "fade-out" : "fade-in");
+}
+
 function loadVideo(v, autoplay = false) {
   if (!v || !v.src) {
     setTicker("⚠️ Missing video URL");
@@ -57,26 +66,33 @@ function loadVideo(v, autoplay = false) {
   el.video.poster = v.poster || "";
   el.video.dataset.resumeTime = "0";
 
-  el.video.load();
+  if (el.title) el.title.textContent = v.title || "Retronyte Episode";
+  if (el.ridPill) el.ridPill.textContent = `t`RID: ${v.rid || "—"}`;
 
-  el.title.textContent = v.title;
-  el.ridPill.textContent = `RID: ${v.rid}`;
-  setTicker(`🎵 Now Playing: ${v.title}`);
-  setURL(v.rid);
+  // Remove "Internet Archive" branding text entirely
+  if (el.sourceLine) el.sourceLine.textContent = "";
 
-  if (autoplay) el.video.play().catch(() => {});
+  setTicker(`🎵 Now Playing: ${v.title || "Retronyte Episode"}`);
+  setURL(v.rid || "latest");
+
+  setStageFade(true);
+  setTimeout(() => {
+    el.video.load();
+    setStageFade(false);
+    if (autoplay) el.video.play().catch(() => {});
+  }, 140);
 }
 
 function renderGrid() {
-  if (!el.grid) return;
+  if (!el.grid || !library?.videos) return;
   el.grid.innerHTML = "";
 
   library.videos.forEach((v, i) => {
     const card = document.createElement("div");
     card.className = "card" + (i === index ? " active" : "");
     card.innerHTML = `
-      <div class="ctitle">${v.title}</div>
-      <div class="crid">RID: ${v.rid}</div>
+      <div class="ctitle">${v.title || "Untitled Episode"}</div>
+      <div class="crid">RID: ${v.rid || "—"}</div>
     `;
     card.addEventListener("click", () => {
       index = i;
@@ -91,56 +107,32 @@ async function init() {
   setTicker("⚡ Loading Retronyte playlist…");
 
   const res = await fetch(`${LIBRARY_URL}?cb=${Date.now()}`);
-  if (!res.ok) throw new Error("Playlist fetch failed");
+  if (!res.ok) throw new Error(`Failed to fetch ${LIBRARY_URL}: ${res.status}`);
 
   library = await res.json();
-  if (!library?.videos?.length) throw new Error("No videos in playlist");
+  if (!library?.videos?.length) throw new Error("library.json has no videos[]");
 
   const rid = new URLSearchParams(location.search).get("v");
-  const found = library.videos.findIndex(v => v.rid === rid);
+  const found = library.videos.findIndex((v) => v.rid === rid);
 
   if (found >= 0) index = found;
   else {
-    const latest = library.videos.findIndex(v => v.rid === library.latest);
-    index = latest >= 0 ? latest : 0;
+    const latestIndex = library.videos.findIndex((v) => v.rid === library.latest);
+    index = latestIndex >= 0 ? latestIndex : 0;
   }
 
   loadVideo(library.videos[index], false);
   renderGrid();
 
-  /* === VIDEO STATE === */
+  // Lightning only while playing
   el.video.addEventListener("play", () => setPlayingUI(true));
+  el.video.addEventListener("pause", () => setPlayingUI(false));
+  el.video.addEventListener("ended", () => setPlayingUI(false));
 
-  el.video.addEventListener("pause", () => {
-    setPlayingUI(false);
-
-    // Save resume time
-    el.video.dataset.resumeTime = String(el.video.currentTime);
-
-    // Snap back to poster
-    el.video.currentTime = 0;
-    el.video.load();
-  });
-
-  el.video.addEventListener("ended", () => {
-    setPlayingUI(false);
-    el.video.dataset.resumeTime = "0";
-    el.video.currentTime = 0;
-    el.video.load();
-  });
-
-  /* === CONTROLS === */
+  // Controls
   el.btnPlay?.addEventListener("click", () => {
-    if (el.video.paused) {
-      const resume = Number(el.video.dataset.resumeTime || "0");
-      if (resume > 0) {
-        el.video.currentTime = resume;
-        el.video.dataset.resumeTime = "0";
-      }
-      el.video.play().catch(() => {});
-    } else {
-      el.video.pause();
-    }
+    if (el.video.paused) el.video.play().catch(() => {});
+    else el.video.pause();
   });
 
   el.btnMute?.addEventListener("click", () => {
@@ -168,27 +160,26 @@ async function init() {
     el.video.closest(".stage")?.requestFullscreen?.();
   });
 
+  // Seek + time
   el.video.addEventListener("loadedmetadata", () => {
-    el.durTime.textContent = fmt(el.video.duration);
+    if (el.durTime) el.durTime.textContent = fmt(el.video.duration);
   });
 
   el.video.addEventListener("timeupdate", () => {
-    el.curTime.textContent = fmt(el.video.currentTime);
-    if (isFinite(el.video.duration) && el.video.duration > 0) {
-      el.seek.value = Math.floor(
-        (el.video.currentTime / el.video.duration) * 1000
-      );
+    if (el.curTime) el.curTime.textContent = fmt(el.video.currentTime);
+    if (isFinite(el.video.duration) && el.video.duration > 0 && el.seek) {
+      el.seek.value = String(Math.floor((el.video.currentTime / el.video.duration) * 1000));
     }
   });
 
   el.seek?.addEventListener("input", () => {
-    if (!isFinite(el.video.duration)) return;
-    el.video.currentTime =
-      (Number(el.seek.value) / 1000) * el.video.duration;
+    if (!isFinite(el.video.duration) || el.video.duration <= 0) return;
+    const pct = Number(el.seek.value) / 1000;
+    el.video.currentTime = pct * el.video.duration;
   });
 }
 
-init().catch(err => {
+init().catch((err) => {
   console.error(err);
-  setTicker("⚠️ Failed to load playlist");
+  setTicker("⚠️ Playlist failed to load");
 });

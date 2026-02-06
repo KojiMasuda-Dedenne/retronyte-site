@@ -1,88 +1,71 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Retronyte — Plug In • Power Up • Play On</title>
-  <link rel="stylesheet" href="style.css?v=777">
 
+  <link rel="stylesheet" href="style.css?v=888">
 </head>
+
 <body>
+  <header>
+    <div class="logo">🎮 RETRONYTE</div>
+    <div class="catchphrase">Plug In • Power Up • Play On</div>
 
-<header>
-  <h1 class="logo">🎮 RETRONYTE</h1>
-  <h2 class="catchphrase">Plug In • Power Up • Play On</h2>
-  <nav>
-    <a href="#home">Home</a>
-    <a href="#player">Now Playing</a>
-    <a href="#playlist">Episodes</a>
-    <a href="https://discord.gg/juqwaTpX" target="_blank">Join Discord</a>
-  </nav>
-</header>
+    <nav class="nav">
+      <a href="#home">Home</a>
+      <a href="https://discord.gg/juqwaTpX" target="_blank" rel="noopener">Join Discord</a>
+    </nav>
+  </header>
 
-<section id="home" class="home-section">
-  <h2>⚡ Retronyte Arcade Online ⚡</h2>
-  <p>Featured episodes playable directly on Retronyte.</p>
-  <div class="crt-glow"></div>
-</section>
+  <main>
+    <section id="home" class="home-section">
+      <h2>⚡ Retronyte Online ⚡</h2>
+      <p>Featured episodes playable directly on Retronyte.</p>
+    </section>
 
-<main id="player" class="player-shell">
-
-  <!-- NOW PLAYING TICKER -->
-  <div class="ticker">
-    <span id="now-playing">Loading playlist…</span>
-  </div>
-
-  <!-- ⚡ LIGHTNING FRAME -->
-  <div class="lightning-frame">
-    <div class="stage">
-
-      <video id="video" class="video" playsinline preload="metadata"></video>
-
-      <!-- Scanlines -->
-      <div class="scanlines" aria-hidden="true"></div>
-
-      <!-- Controls -->
-      <div class="controls">
-        <button id="btnPlay" class="btn">▶</button>
-        <button id="btnMute" class="btn">🔊</button>
-
-        <span class="time">
-          <span id="curTime">0:00</span>/<span id="durTime">0:00</span>
-        </span>
-
-        <input id="seek" class="seek" type="range" min="0" max="1000" value="0" />
-        <input id="vol" class="vol" type="range" min="0" max="1" step="0.01" value="0.9" />
-
-        <button id="btnPrev" class="btn">⏮</button>
-        <button id="btnNext" class="btn">⏭</button>
-        <button id="btnFs" class="btn">⛶</button>
+    <section class="player-shell">
+      <div class="ticker">
+        <span id="now-playing">Loading playlist…</span>
       </div>
 
-    </div>
-  </div>
+      <div class="lightning-frame">
+        <div class="stage fade-in">
+          <video id="video" class="video" playsinline preload="metadata"></video>
+          <div class="scanlines" aria-hidden="true"></div>
 
-  <!-- META -->
-  <div class="meta">
-    <div>
-      <div id="title" class="meta-title">—</div>
-      <div class="meta-sub">Internet Archive • Retronyte Player</div>
-    </div>
-    <span id="ridPill" class="pill">RID: —</span>
-  </div>
+          <div class="controls">
+            <button class="btn" id="btnPlay">▶</button>
+            <button class="btn" id="btnMute">🔊</button>
 
-</main>
+            <div class="time" id="curTime">0:00</div>
+            <input class="seek" id="seek" type="range" min="0" max="1000" value="0">
+            <div class="time" id="durTime">0:00</div>
 
-<section id="playlist" class="playlist">
-  <h2 class="section-title">Episode Library</h2>
-  <div id="grid" class="grid"></div>
-</section>
+            <input class="vol" id="vol" type="range" min="0" max="1" step="0.01" value="1">
+            <button class="btn" id="btnPrev">⏮</button>
+            <button class="btn" id="btnNext">⏭</button>
+            <button class="btn" id="btnFs">⛶</button>
+          </div>
+        </div>
+      </div>
 
-<footer>
-  <p>© 2026 Retronyte</p>
-</footer>
+      <div class="meta">
+        <div>
+          <div id="title" style="font-size:.75rem; text-align:left;"></div>
+          <div class="meta-sub" id="sourceLine"></div>
+        </div>
+        <div class="pill" id="ridPill">RID: —</div>
+      </div>
 
-<script src="script.js?v=777"></script>
+      <h2 style="margin-top:18px;">Episode Library</h2>
+      <div class="grid" id="grid"></div>
 
+      <footer>© 2026 Retronyte</footer>
+    </section>
+  </main>
+
+  <script src="script.js?v=888"></script>
 </body>
 </html>
