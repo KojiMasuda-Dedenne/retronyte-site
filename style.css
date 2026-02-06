@@ -1,324 +1,269 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-:root {
-  --cyan: #00ffff;
-  --cyan-soft: rgba(0,255,255,0.5);
-  --blue: #00ccff;
-  --magenta: #ff00ff;
-  --bg-dark: #020204;
-  --bg-mid: #07070d;
-  --panel: rgba(10,10,20,0.75);
-  --text: #00ffee;
-  --muted: #8a8a8a;
+:root{
+  --cyan:#00ffff;
+  --blue:#00ccff;
+  --mag:#ff00ff;
+  --bg1:#07070d;
+  --bg2:#020204;
+  --panel:rgba(10,10,20,.75);
+  --text:#00ffee;
+  --muted:#8a8a8a;
 }
 
-/* =====================
-   BASE
-===================== */
-body {
-  margin: 0;
-  background: radial-gradient(circle at center, var(--bg-mid), var(--bg-dark));
-  color: var(--text);
-  font-family: 'Press Start 2P', monospace;
-  text-align: center;
-  overflow-x: hidden;
+body{
+  margin:0;
+  background:radial-gradient(circle at center,var(--bg1) 0%,var(--bg2) 100%);
+  color:var(--text);
+  font-family:'Press Start 2P',monospace;
+  text-align:center;
+  overflow-x:hidden;
 }
 
-/* =====================
-   HEADER
-===================== */
-.logo {
-  font-size: 2.6rem;
-  margin: 1.4rem 0 0.3rem;
-  color: var(--cyan);
-  text-shadow:
-    0 0 10px var(--cyan),
-    0 0 22px var(--blue),
-    0 0 40px var(--magenta);
-  animation: logoGlow 3s infinite alternate;
+.logo{
+  font-size:2.6rem;
+  margin:1.4rem 0 .35rem;
+  color:var(--cyan);
+  text-shadow:0 0 10px var(--cyan),0 0 20px var(--blue),0 0 40px var(--mag);
+  animation:logoGlow 3s infinite alternate;
+}
+.catchphrase{
+  font-size:1rem;
+  margin:0 0 1.2rem;
+  color:var(--mag);
+  text-shadow:0 0 10px var(--mag),0 0 18px var(--cyan);
+  letter-spacing:2px;
+  animation:pulseGlow 2.4s infinite alternate;
 }
 
-.catchphrase {
-  font-size: 1rem;
-  margin-bottom: 1.4rem;
-  color: var(--magenta);
-  letter-spacing: 2px;
-  text-shadow:
-    0 0 6px var(--magenta),
-    0 0 12px var(--cyan);
-  animation: pulseGlow 2.4s infinite alternate;
+nav a{
+  color:var(--text);
+  margin:0 12px;
+  text-decoration:none;
+  font-size:.8rem;
+}
+nav a:hover{
+  color:var(--mag);
+  text-shadow:0 0 8px var(--mag);
 }
 
-nav a {
-  color: var(--text);
-  text-decoration: none;
-  margin: 0 12px;
-  font-size: 0.8rem;
+.home-section{
+  max-width:980px;
+  margin:0 auto 30px;
+  padding:36px 20px;
+  background:var(--panel);
+  border-top:2px solid var(--cyan);
+  border-bottom:2px solid var(--cyan);
+  box-shadow:inset 0 0 18px rgba(0,255,255,.45);
+  animation:flicker 3.1s infinite;
 }
-nav a:hover {
-  color: var(--magenta);
-  text-shadow: 0 0 8px var(--magenta);
+.home-section h2{
+  color:var(--mag);
+  text-shadow:0 0 10px var(--mag),0 0 18px var(--cyan);
 }
-
-/* =====================
-   HOME / WIP
-===================== */
-.home-section {
-  max-width: 980px;
-  margin: 0 auto 32px;
-  padding: 36px 20px;
-  background: var(--panel);
-  border-top: 2px solid var(--cyan);
-  border-bottom: 2px solid var(--cyan);
-  box-shadow: inset 0 0 18px var(--cyan-soft);
-  animation: flicker 3.2s infinite;
+.crt-glow{
+  height:4px;
+  margin-top:14px;
+  background:radial-gradient(circle, rgba(0,255,255,.7) 0%, transparent 70%);
+  animation:flicker 1.8s infinite;
 }
 
-.home-section h2 {
-  color: var(--magenta);
-  text-shadow: 0 0 10px var(--magenta), 0 0 18px var(--cyan);
+.player-shell{
+  max-width:980px;
+  margin:0 auto;
+  padding:0 10px;
 }
 
-.crt-glow {
-  height: 4px;
-  margin-top: 14px;
-  background: radial-gradient(circle, var(--cyan), transparent);
+.ticker{
+  overflow:hidden;
+  white-space:nowrap;
+  padding:8px 10px;
+  border-top:2px solid var(--cyan);
+  border-bottom:2px solid var(--cyan);
+  box-shadow:inset 0 0 10px rgba(0,255,255,.35);
+  background:rgba(0,0,0,.35);
+}
+.ticker span{
+  display:inline-block;
+  animation:scroll 14s linear infinite;
 }
 
-/* =====================
-   PLAYER SHELL
-===================== */
-.player-shell {
-  max-width: 980px;
-  margin: 0 auto;
+/* ⚡ Lightning frame */
+.lightning-frame{
+  position:relative;
+  padding:10px;
+  border-radius:18px;
+  filter:drop-shadow(0 0 20px rgba(0,255,255,.55));
 }
-
-/* =====================
-   NOW PLAYING TICKER
-===================== */
-.ticker {
-  overflow: hidden;
-  white-space: nowrap;
-  padding: 8px 10px;
-  border-top: 2px solid var(--cyan);
-  border-bottom: 2px solid var(--cyan);
-  box-shadow: inset 0 0 10px var(--cyan-soft);
-}
-
-.ticker span {
-  display: inline-block;
-  animation: scroll 14s linear infinite;
-}
-
-/* =====================
-   LIGHTNING FRAME
-===================== */
-.lightning-frame {
-  position: relative;
-  padding: 10px;
-  border-radius: 18px;
-  filter: drop-shadow(0 0 20px rgba(0,255,255,0.6));
-}
-
 .lightning-frame::before,
-.lightning-frame::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 18px;
-  pointer-events: none;
+.lightning-frame::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:18px;
+  pointer-events:none;
+}
+.lightning-frame::before{
+  border:3px solid transparent;
+  background:linear-gradient(120deg,var(--cyan),var(--mag),var(--cyan)) border-box;
+  mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  animation:lightningPulse 2.6s linear infinite;
+  opacity:.9;
+}
+.lightning-frame::after{
+  border:2px dashed rgba(0,255,255,.75);
+  animation:lightningFlicker .18s infinite alternate;
+  opacity:.7;
 }
 
-.lightning-frame::before {
-  border: 3px solid transparent;
-  background:
-    linear-gradient(
-      120deg,
-      var(--cyan),
-      var(--magenta),
-      var(--cyan)
-    ) border-box;
-  mask:
-    linear-gradient(#000 0 0) padding-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-          mask-composite: exclude;
-  animation: lightningPulse 2.6s linear infinite;
+.stage{
+  position:relative;
+  aspect-ratio:16/9;
+  background:black;
+  border-radius:14px;
+  overflow:hidden;
 }
 
-.lightning-frame::after {
-  border: 2px dashed rgba(0,255,255,0.7);
-  animation: lightningFlicker 0.18s infinite alternate;
-}
-
-/* =====================
-   VIDEO STAGE
-===================== */
-.stage {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  background: black;
-  border-radius: 14px;
-  overflow: hidden;
-}
-
-.video {
-  width: 100%;
-  height: 100%;
-  display: block;
+.video{
+  width:100%;
+  height:100%;
+  display:block;
+  background:black;
 }
 
 /* Scanlines */
-.scanlines {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(
+.scanlines{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:repeating-linear-gradient(
     to bottom,
-    rgba(0,255,255,0.05),
-    rgba(0,255,255,0.05) 1px,
-    transparent 3px,
-    transparent 6px
+    rgba(0,255,255,0.06),
+    rgba(0,255,255,0.06) 1px,
+    rgba(0,0,0,0) 3px,
+    rgba(0,0,0,0) 6px
   );
-  mix-blend-mode: screen;
-  opacity: 0.25;
+  mix-blend-mode:screen;
+  opacity:.25;
+  animation:scan 6s linear infinite;
 }
 
-/* =====================
-   CONTROLS
-===================== */
-.controls {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
-  background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+/* Controls */
+.controls{
+  position:absolute;
+  left:0; right:0; bottom:0;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  padding:10px;
+  background:linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,0));
+}
+.btn{
+  font-family:inherit;
+  font-size:.75rem;
+  padding:8px 10px;
+  color:var(--text);
+  background:rgba(10,10,20,.65);
+  border:2px solid var(--cyan);
+  border-radius:10px;
+  cursor:pointer;
+}
+.btn:hover{
+  border-color:var(--mag);
+  box-shadow:0 0 12px rgba(255,0,255,.55);
+}
+.seek{ flex:1; accent-color:var(--mag); }
+.vol{ width:110px; accent-color:var(--cyan); }
+.time{ font-size:.65rem; color:var(--text); }
+
+.meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:12px 6px 18px;
+}
+.meta-title{
+  font-size:.9rem;
+  color:var(--cyan);
+  text-shadow:0 0 10px rgba(0,255,255,.35);
+}
+.meta-sub{
+  margin-top:6px;
+  font-size:.65rem;
+  color:var(--muted);
+}
+.pill{
+  font-size:.65rem;
+  padding:8px 10px;
+  border:2px solid var(--mag);
+  border-radius:999px;
+  color:#ffd6ff;
+  box-shadow:0 0 12px rgba(255,0,255,.45);
 }
 
-.btn {
-  font-family: inherit;
-  font-size: 0.75rem;
-  padding: 8px 10px;
-  color: var(--text);
-  background: rgba(10,10,20,0.65);
-  border: 2px solid var(--cyan);
-  border-radius: 10px;
-  cursor: pointer;
+.playlist{
+  max-width:980px;
+  margin:0 auto;
+  padding:0 10px;
 }
-.btn:hover {
-  border-color: var(--magenta);
-  box-shadow: 0 0 12px var(--magenta);
+.section-title{
+  color:var(--mag);
+  text-shadow:0 0 12px var(--mag),0 0 20px var(--cyan);
+  font-size:1.1rem;
+  margin:30px 0 14px;
 }
-
-.seek {
-  flex: 1;
-  accent-color: var(--magenta);
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:14px;
+  margin-bottom:40px;
 }
-.vol {
-  width: 110px;
-  accent-color: var(--cyan);
+.card{
+  text-align:left;
+  border:2px solid var(--cyan);
+  border-radius:14px;
+  background:rgba(10,10,20,.75);
+  box-shadow:0 0 14px rgba(0,255,255,.25);
+  padding:12px;
+  cursor:pointer;
+  transition:transform .15s, box-shadow .15s, border-color .15s;
 }
-
-.time {
-  font-size: 0.65rem;
-  color: var(--text);
+.card:hover{
+  transform:translateY(-2px);
+  border-color:var(--mag);
+  box-shadow:0 0 16px rgba(255,0,255,.35);
 }
-
-/* =====================
-   META
-===================== */
-.meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 6px 18px;
-}
-
-.meta-title {
-  color: var(--cyan);
-  font-size: 0.9rem;
-  text-shadow: 0 0 10px var(--cyan-soft);
+.card .ctitle{ font-size:.75rem; color:var(--text); margin-bottom:8px; }
+.card .crid{ font-size:.6rem; color:var(--muted); }
+.card.active{
+  border-color:var(--mag);
+  box-shadow:0 0 18px rgba(255,0,255,.45);
 }
 
-.meta-sub {
-  font-size: 0.65rem;
-  color: var(--muted);
+footer{
+  margin:26px 0 18px;
+  font-size:.7rem;
+  color:var(--muted);
 }
 
-.pill {
-  font-size: 0.65rem;
-  padding: 8px 10px;
-  border: 2px solid var(--magenta);
-  border-radius: 999px;
-  color: #ffd6ff;
-  box-shadow: 0 0 12px var(--magenta);
+/* Animations */
+@keyframes scroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+@keyframes flicker{
+  0%,18%,22%,25%,53%,57%,100%{opacity:.92;}
+  20%,24%,55%{opacity:.62;}
 }
+@keyframes lightningPulse{0%{opacity:.6}50%{opacity:1}100%{opacity:.6}}
+@keyframes lightningFlicker{from{opacity:.3}to{opacity:.75}}
+@keyframes logoGlow{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(10deg)}}
+@keyframes pulseGlow{from{opacity:.9}to{opacity:1}}
+@keyframes scan{0%{transform:translateY(-8px)}100%{transform:translateY(8px)}}
 
-/* =====================
-   PLAYLIST
-===================== */
-.playlist {
-  max-width: 980px;
-  margin: 0 auto;
-}
-
-.section-title {
-  color: var(--magenta);
-  text-shadow: 0 0 12px var(--magenta), 0 0 20px var(--cyan);
-  margin: 30px 0 16px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 14px;
-  margin-bottom: 40px;
-}
-
-/* =====================
-   FOOTER
-===================== */
-footer {
-  margin: 24px 0 18px;
-  font-size: 0.7rem;
-  color: var(--muted);
-}
-
-/* =====================
-   ANIMATIONS
-===================== */
-@keyframes scroll {
-  from { transform: translateX(100%); }
-  to   { transform: translateX(-100%); }
-}
-
-@keyframes flicker {
-  0%,100% { opacity: 1; }
-  45% { opacity: 0.85; }
-  60% { opacity: 0.75; }
-}
-
-@keyframes lightningPulse {
-  0%   { opacity: 0.6; }
-  50%  { opacity: 1; }
-  100% { opacity: 0.6; }
-}
-
-@keyframes lightningFlicker {
-  from { opacity: 0.3; }
-  to   { opacity: 0.7; }
-}
-
-@keyframes logoGlow {
-  from { text-shadow: 0 0 10px var(--cyan), 0 0 24px var(--magenta); }
-  to   { text-shadow: 0 0 14px var(--magenta), 0 0 30px var(--cyan); }
-}
-
-@keyframes pulseGlow {
-  from { text-shadow: 0 0 6px var(--magenta), 0 0 14px var(--cyan); }
-  to   { text-shadow: 0 0 10px var(--cyan), 0 0 22px var(--magenta); }
+@media (max-width:600px){
+  .logo{font-size:2.1rem}
+  .catchphrase{font-size:.85rem}
+  .btn{font-size:.7rem;padding:7px 9px}
+  .vol{width:90px}
 }
