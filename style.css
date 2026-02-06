@@ -1,130 +1,324 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-body{
-  background:radial-gradient(circle at center,#07070d 0%,#020204 100%);
-  color:#00ffee;
-  font-family:'Press Start 2P',monospace;
-  text-align:center;
-  margin:0;
-  overflow-x:hidden;
+:root {
+  --cyan: #00ffff;
+  --cyan-soft: rgba(0,255,255,0.5);
+  --blue: #00ccff;
+  --magenta: #ff00ff;
+  --bg-dark: #020204;
+  --bg-mid: #07070d;
+  --panel: rgba(10,10,20,0.75);
+  --text: #00ffee;
+  --muted: #8a8a8a;
 }
 
-/* --- TITLE --- */
-.logo{
-  font-size:2.6rem;
-  margin:1.4rem 0 .4rem;
-  color:#00ffff;
-  text-shadow:0 0 8px #00ffff,0 0 16px #00ccff,0 0 32px #ff00ff;
-  animation:logoGlow 3s infinite alternate;
+/* =====================
+   BASE
+===================== */
+body {
+  margin: 0;
+  background: radial-gradient(circle at center, var(--bg-mid), var(--bg-dark));
+  color: var(--text);
+  font-family: 'Press Start 2P', monospace;
+  text-align: center;
+  overflow-x: hidden;
 }
 
-/* --- CATCHPHRASE --- */
-.catchphrase{
-  font-size:1rem;
-  margin:0 0 1.5rem;
-  color:#ff33ff;
-  text-shadow:0 0 6px #ff00ff,0 0 12px #ff66ff,0 0 20px #00ffff;
-  letter-spacing:2px;
-  animation:pulseGlow 2.5s infinite alternate;
+/* =====================
+   HEADER
+===================== */
+.logo {
+  font-size: 2.6rem;
+  margin: 1.4rem 0 0.3rem;
+  color: var(--cyan);
+  text-shadow:
+    0 0 10px var(--cyan),
+    0 0 22px var(--blue),
+    0 0 40px var(--magenta);
+  animation: logoGlow 3s infinite alternate;
 }
 
-/* --- NAV --- */
-nav a{
-  color:#00ffee;
-  margin:0 12px;
-  text-decoration:none;
-  font-size:.8rem;
-  transition:color .3s,text-shadow .3s;
-}
-nav a:hover{
-  color:#ff00ff;
-  text-shadow:0 0 8px #ff00ff;
+.catchphrase {
+  font-size: 1rem;
+  margin-bottom: 1.4rem;
+  color: var(--magenta);
+  letter-spacing: 2px;
+  text-shadow:
+    0 0 6px var(--magenta),
+    0 0 12px var(--cyan);
+  animation: pulseGlow 2.4s infinite alternate;
 }
 
-/* --- HOME CRT --- */
-.home-section{
-  background:rgba(10,10,20,.75);
-  border-top:2px solid #00ffff;
-  border-bottom:2px solid #00ffff;
-  padding:40px 20px;
-  max-width:960px;
-  margin:0 auto 40px;
-  box-shadow:inset 0 0 20px #00ffff;
-  animation:flicker 3s infinite;
+nav a {
+  color: var(--text);
+  text-decoration: none;
+  margin: 0 12px;
+  font-size: 0.8rem;
 }
-.home-section h2{
-  color:#ff00ff;
-  font-size:1.2rem;
-  text-shadow:0 0 10px #ff00ff,0 0 20px #00ffff;
-}
-.home-section p{
-  color:#00ffee;
-  text-shadow:0 0 6px #00ffff;
-}
-.crt-glow{
-  width:100%;
-  height:4px;
-  background:radial-gradient(circle,#00ffff55 0%,transparent 70%);
-  margin-top:16px;
-  animation:flicker 1.8s infinite;
+nav a:hover {
+  color: var(--magenta);
+  text-shadow: 0 0 8px var(--magenta);
 }
 
-/* --- PLAYER --- */
-.video-frame{
-  position:relative;
-  width:960px;
-  aspect-ratio:16/9;
-  margin:25px auto;
-  border:3px solid #00ffff;
-  border-radius:12px;
-  box-shadow:0 0 20px #00ffff;
-  background:black;
-}
-iframe{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  border:0;
-  border-radius:12px;
-}
-@media(max-width:1000px){
-  .video-frame{width:90%;height:auto;}
+/* =====================
+   HOME / WIP
+===================== */
+.home-section {
+  max-width: 980px;
+  margin: 0 auto 32px;
+  padding: 36px 20px;
+  background: var(--panel);
+  border-top: 2px solid var(--cyan);
+  border-bottom: 2px solid var(--cyan);
+  box-shadow: inset 0 0 18px var(--cyan-soft);
+  animation: flicker 3.2s infinite;
 }
 
-/* --- SCROLLING TICKER --- */
-.ticker{
-  background:#101018;
-  overflow:hidden;
-  box-shadow:inset 0 0 10px #00ffff;
-  color:#00ffee;
-  padding:8px;
-  font-size:.75rem;
-  white-space:nowrap;
-}
-.ticker span{
-  display:inline-block;
-  animation:scroll 14s linear infinite;
+.home-section h2 {
+  color: var(--magenta);
+  text-shadow: 0 0 10px var(--magenta), 0 0 18px var(--cyan);
 }
 
-/* --- FOOTER --- */
-footer{
-  margin:2rem 0 1rem;
-  font-size:.7rem;
-  color:#808080;
+.crt-glow {
+  height: 4px;
+  margin-top: 14px;
+  background: radial-gradient(circle, var(--cyan), transparent);
 }
 
-/* --- ANIMATIONS --- */
-@keyframes scroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
-@keyframes flicker{
-  0%,18%,22%,25%,53%,57%,100%{opacity:.8;}
-  20%,24%,55%{opacity:.5;}
+/* =====================
+   PLAYER SHELL
+===================== */
+.player-shell {
+  max-width: 980px;
+  margin: 0 auto;
 }
-@keyframes pulseGlow{
-  from{text-shadow:0 0 6px #ff00ff,0 0 12px #ff66ff,0 0 20px #00ffff;}
-  to{text-shadow:0 0 10px #ff33ff,0 0 25px #00ffff,0 0 40px #ff00ff;}
+
+/* =====================
+   NOW PLAYING TICKER
+===================== */
+.ticker {
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 8px 10px;
+  border-top: 2px solid var(--cyan);
+  border-bottom: 2px solid var(--cyan);
+  box-shadow: inset 0 0 10px var(--cyan-soft);
 }
-@keyframes logoGlow{
-  from{text-shadow:0 0 8px #00ffff,0 0 20px #ff00ff;}
-  to{text-shadow:0 0 10px #ff00ff,0 0 25px #00ffff;}
+
+.ticker span {
+  display: inline-block;
+  animation: scroll 14s linear infinite;
+}
+
+/* =====================
+   LIGHTNING FRAME
+===================== */
+.lightning-frame {
+  position: relative;
+  padding: 10px;
+  border-radius: 18px;
+  filter: drop-shadow(0 0 20px rgba(0,255,255,0.6));
+}
+
+.lightning-frame::before,
+.lightning-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  pointer-events: none;
+}
+
+.lightning-frame::before {
+  border: 3px solid transparent;
+  background:
+    linear-gradient(
+      120deg,
+      var(--cyan),
+      var(--magenta),
+      var(--cyan)
+    ) border-box;
+  mask:
+    linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  animation: lightningPulse 2.6s linear infinite;
+}
+
+.lightning-frame::after {
+  border: 2px dashed rgba(0,255,255,0.7);
+  animation: lightningFlicker 0.18s infinite alternate;
+}
+
+/* =====================
+   VIDEO STAGE
+===================== */
+.stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: black;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Scanlines */
+.scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,255,255,0.05),
+    rgba(0,255,255,0.05) 1px,
+    transparent 3px,
+    transparent 6px
+  );
+  mix-blend-mode: screen;
+  opacity: 0.25;
+}
+
+/* =====================
+   CONTROLS
+===================== */
+.controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+}
+
+.btn {
+  font-family: inherit;
+  font-size: 0.75rem;
+  padding: 8px 10px;
+  color: var(--text);
+  background: rgba(10,10,20,0.65);
+  border: 2px solid var(--cyan);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.btn:hover {
+  border-color: var(--magenta);
+  box-shadow: 0 0 12px var(--magenta);
+}
+
+.seek {
+  flex: 1;
+  accent-color: var(--magenta);
+}
+.vol {
+  width: 110px;
+  accent-color: var(--cyan);
+}
+
+.time {
+  font-size: 0.65rem;
+  color: var(--text);
+}
+
+/* =====================
+   META
+===================== */
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 6px 18px;
+}
+
+.meta-title {
+  color: var(--cyan);
+  font-size: 0.9rem;
+  text-shadow: 0 0 10px var(--cyan-soft);
+}
+
+.meta-sub {
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+
+.pill {
+  font-size: 0.65rem;
+  padding: 8px 10px;
+  border: 2px solid var(--magenta);
+  border-radius: 999px;
+  color: #ffd6ff;
+  box-shadow: 0 0 12px var(--magenta);
+}
+
+/* =====================
+   PLAYLIST
+===================== */
+.playlist {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.section-title {
+  color: var(--magenta);
+  text-shadow: 0 0 12px var(--magenta), 0 0 20px var(--cyan);
+  margin: 30px 0 16px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+/* =====================
+   FOOTER
+===================== */
+footer {
+  margin: 24px 0 18px;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+/* =====================
+   ANIMATIONS
+===================== */
+@keyframes scroll {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(-100%); }
+}
+
+@keyframes flicker {
+  0%,100% { opacity: 1; }
+  45% { opacity: 0.85; }
+  60% { opacity: 0.75; }
+}
+
+@keyframes lightningPulse {
+  0%   { opacity: 0.6; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+@keyframes lightningFlicker {
+  from { opacity: 0.3; }
+  to   { opacity: 0.7; }
+}
+
+@keyframes logoGlow {
+  from { text-shadow: 0 0 10px var(--cyan), 0 0 24px var(--magenta); }
+  to   { text-shadow: 0 0 14px var(--magenta), 0 0 30px var(--cyan); }
+}
+
+@keyframes pulseGlow {
+  from { text-shadow: 0 0 6px var(--magenta), 0 0 14px var(--cyan); }
+  to   { text-shadow: 0 0 10px var(--cyan), 0 0 22px var(--magenta); }
 }
