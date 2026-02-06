@@ -109,14 +109,32 @@ async function init() {
 
   // Lightning only while playing
   el.video.addEventListener("play", () => setPlayingUI(true));
-  el.video.addEventListener("pause", () => setPlayingUI(false));
+el.video.addEventListener("pause", () => {
+  setPlayingUI(false);
+
+  // Save where we paused
+  el.video.dataset.resumeTime = String(el.video.currentTime);
+
+  // Snap back to poster
+  el.video.currentTime = 0;
+});
+
   el.video.addEventListener("ended", () => setPlayingUI(false));
 
   // Buttons
-  el.btnPlay?.addEventListener("click", () => {
-    if (el.video.paused) el.video.play().catch(() => {});
-    else el.video.pause();
-  });
+  btnPlay.addEventListener("click", () => {
+  if (el.video.paused) {
+    const resume = Number(el.video.dataset.resumeTime || "0");
+    if (resume > 0) {
+      el.video.currentTime = resume;
+      el.video.dataset.resumeTime = "0";
+    }
+    el.video.play().catch(() => {});
+  } else {
+    el.video.pause();
+  }
+});
+
 
   el.btnMute?.addEventListener("click", () => {
     el.video.muted = !el.video.muted;
