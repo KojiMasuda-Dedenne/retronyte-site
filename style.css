@@ -1,50 +1,62 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
 
-:root{
+:root {
   --cyan:#00ffff;
-  --blue:#00ccff;
   --mag:#ff00ff;
   --bg1:#07070d;
   --bg2:#020204;
-  --panel:rgba(10,10,20,.75);
   --text:#00ffee;
+  --panel:rgba(10,10,20,.75);
   --muted:#8a8a8a;
 }
 
 body{
   margin:0;
-  background:radial-gradient(circle at center,var(--bg1) 0%,var(--bg2) 100%);
+  background:radial-gradient(circle,var(--bg1),var(--bg2));
+  font-family:"Press Start 2P", monospace;
   color:var(--text);
-  font-family:'Press Start 2P',monospace;
   text-align:center;
   overflow-x:hidden;
+}
+
+/* Header CRT shimmer */
+header{ position:relative; }
+header::after{
+  content:"";
+  position:absolute; inset:0;
+  pointer-events:none;
+  background:repeating-linear-gradient(
+    to bottom,
+    rgba(0,255,255,0.05),
+    rgba(0,255,255,0.05) 1px,
+    transparent 3px,
+    transparent 7px
+  );
+  opacity:.25;
+  animation:headerScan 5s linear infinite;
 }
 
 .logo{
   font-size:2.6rem;
   margin:1.4rem 0 .35rem;
   color:var(--cyan);
-  text-shadow:0 0 10px var(--cyan),0 0 20px var(--blue),0 0 40px var(--mag);
-  animation:logoGlow 3s infinite alternate;
+  text-shadow:0 0 12px var(--cyan),0 0 26px var(--mag);
+  animation:headerFlicker 3.2s infinite;
 }
 .catchphrase{
-  font-size:1rem;
-  margin:0 0 1.2rem;
+  margin:0 0 1.1rem;
   color:var(--mag);
   text-shadow:0 0 10px var(--mag),0 0 18px var(--cyan);
-  letter-spacing:2px;
-  animation:pulseGlow 2.4s infinite alternate;
+  animation:headerFlicker 4s infinite;
 }
 
-nav a{
-  color:var(--text);
-  margin:0 12px;
-  text-decoration:none;
-  font-size:.8rem;
+@keyframes headerScan{
+  0%{ transform:translateY(-10px); }
+  100%{ transform:translateY(10px); }
 }
-nav a:hover{
-  color:var(--mag);
-  text-shadow:0 0 8px var(--mag);
+@keyframes headerFlicker{
+  0%,19%,22%,62%,64%,100%{ opacity:1; }
+  20%,63%{ opacity:.78; }
 }
 
 .home-section{
@@ -54,18 +66,12 @@ nav a:hover{
   background:var(--panel);
   border-top:2px solid var(--cyan);
   border-bottom:2px solid var(--cyan);
-  box-shadow:inset 0 0 18px rgba(0,255,255,.45);
+  box-shadow:inset 0 0 18px rgba(0,255,255,.35);
   animation:flicker 3.1s infinite;
 }
-.home-section h2{
-  color:var(--mag);
-  text-shadow:0 0 10px var(--mag),0 0 18px var(--cyan);
-}
-.crt-glow{
-  height:4px;
-  margin-top:14px;
-  background:radial-gradient(circle, rgba(0,255,255,.7) 0%, transparent 70%);
-  animation:flicker 1.8s infinite;
+@keyframes flicker{
+  0%,18%,22%,25%,53%,57%,100%{opacity:.92;}
+  20%,24%,55%{opacity:.62;}
 }
 
 .player-shell{
@@ -74,27 +80,33 @@ nav a:hover{
   padding:0 10px;
 }
 
+/* Now playing ticker */
 .ticker{
   overflow:hidden;
   white-space:nowrap;
   padding:8px 10px;
   border-top:2px solid var(--cyan);
   border-bottom:2px solid var(--cyan);
-  box-shadow:inset 0 0 10px rgba(0,255,255,.35);
   background:rgba(0,0,0,.35);
+  box-shadow:inset 0 0 10px rgba(0,255,255,.25);
 }
 .ticker span{
   display:inline-block;
   animation:scroll 14s linear infinite;
 }
+@keyframes scroll{
+  from{transform:translateX(100%);}
+  to{transform:translateX(-100%);}
+}
 
-/* ⚡ Lightning frame */
+/* Lightning wrapper exists, but is invisible unless playing */
 .lightning-frame{
   position:relative;
   padding:10px;
   border-radius:18px;
-  filter:drop-shadow(0 0 20px rgba(0,255,255,.55));
 }
+
+/* OFF by default */
 .lightning-frame::before,
 .lightning-frame::after{
   content:"";
@@ -102,21 +114,32 @@ nav a:hover{
   inset:0;
   border-radius:18px;
   pointer-events:none;
+  opacity:0;
 }
-.lightning-frame::before{
+
+/* ON only while playing */
+body.playing .lightning-frame{
+  filter:drop-shadow(0 0 24px rgba(0,255,255,.7));
+}
+body.playing .lightning-frame::before{
+  opacity:.95;
   border:3px solid transparent;
   background:linear-gradient(120deg,var(--cyan),var(--mag),var(--cyan)) border-box;
   mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
   mask-composite:exclude;
-  animation:lightningPulse 2.6s linear infinite;
-  opacity:.9;
+  animation:lightningPulse 2.0s linear infinite;
 }
-.lightning-frame::after{
-  border:2px dashed rgba(0,255,255,.75);
-  animation:lightningFlicker .18s infinite alternate;
-  opacity:.7;
+body.playing .lightning-frame::after{
+  opacity:.8;
+  inset:4px;
+  border-radius:14px;
+  border:2px dashed rgba(0,255,255,.9);
+  animation:lightningFlicker .12s infinite alternate;
 }
+
+@keyframes lightningPulse{0%{opacity:.6}50%{opacity:1}100%{opacity:.6}}
+@keyframes lightningFlicker{from{opacity:.35}to{opacity:.85}}
 
 .stage{
   position:relative;
@@ -142,12 +165,16 @@ nav a:hover{
     to bottom,
     rgba(0,255,255,0.06),
     rgba(0,255,255,0.06) 1px,
-    rgba(0,0,0,0) 3px,
-    rgba(0,0,0,0) 6px
+    transparent 3px,
+    transparent 6px
   );
-  mix-blend-mode:screen;
   opacity:.25;
+  mix-blend-mode:screen;
   animation:scan 6s linear infinite;
+}
+@keyframes scan{
+  0%{transform:translateY(-8px)}
+  100%{transform:translateY(8px)}
 }
 
 /* Controls */
@@ -172,12 +199,13 @@ nav a:hover{
 }
 .btn:hover{
   border-color:var(--mag);
-  box-shadow:0 0 12px rgba(255,0,255,.55);
+  box-shadow:0 0 12px rgba(255,0,255,.35);
 }
 .seek{ flex:1; accent-color:var(--mag); }
 .vol{ width:110px; accent-color:var(--cyan); }
 .time{ font-size:.65rem; color:var(--text); }
 
+/* Meta + playlist */
 .meta{
   display:flex;
   justify-content:space-between;
@@ -185,35 +213,14 @@ nav a:hover{
   gap:12px;
   padding:12px 6px 18px;
 }
-.meta-title{
-  font-size:.9rem;
-  color:var(--cyan);
-  text-shadow:0 0 10px rgba(0,255,255,.35);
-}
-.meta-sub{
-  margin-top:6px;
-  font-size:.65rem;
-  color:var(--muted);
-}
+.meta-sub{ font-size:.65rem; color:var(--muted); }
 .pill{
   font-size:.65rem;
   padding:8px 10px;
   border:2px solid var(--mag);
   border-radius:999px;
   color:#ffd6ff;
-  box-shadow:0 0 12px rgba(255,0,255,.45);
-}
-
-.playlist{
-  max-width:980px;
-  margin:0 auto;
-  padding:0 10px;
-}
-.section-title{
-  color:var(--mag);
-  text-shadow:0 0 12px var(--mag),0 0 20px var(--cyan);
-  font-size:1.1rem;
-  margin:30px 0 14px;
+  box-shadow:0 0 12px rgba(255,0,255,.25);
 }
 .grid{
   display:grid;
@@ -226,44 +233,15 @@ nav a:hover{
   border:2px solid var(--cyan);
   border-radius:14px;
   background:rgba(10,10,20,.75);
-  box-shadow:0 0 14px rgba(0,255,255,.25);
   padding:12px;
   cursor:pointer;
-  transition:transform .15s, box-shadow .15s, border-color .15s;
 }
-.card:hover{
-  transform:translateY(-2px);
-  border-color:var(--mag);
-  box-shadow:0 0 16px rgba(255,0,255,.35);
-}
-.card .ctitle{ font-size:.75rem; color:var(--text); margin-bottom:8px; }
+.card.active{ border-color:var(--mag); }
+.card .ctitle{ font-size:.75rem; margin-bottom:8px; }
 .card .crid{ font-size:.6rem; color:var(--muted); }
-.card.active{
-  border-color:var(--mag);
-  box-shadow:0 0 18px rgba(255,0,255,.45);
-}
 
 footer{
   margin:26px 0 18px;
   font-size:.7rem;
   color:var(--muted);
-}
-
-/* Animations */
-@keyframes scroll{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
-@keyframes flicker{
-  0%,18%,22%,25%,53%,57%,100%{opacity:.92;}
-  20%,24%,55%{opacity:.62;}
-}
-@keyframes lightningPulse{0%{opacity:.6}50%{opacity:1}100%{opacity:.6}}
-@keyframes lightningFlicker{from{opacity:.3}to{opacity:.75}}
-@keyframes logoGlow{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(10deg)}}
-@keyframes pulseGlow{from{opacity:.9}to{opacity:1}}
-@keyframes scan{0%{transform:translateY(-8px)}100%{transform:translateY(8px)}}
-
-@media (max-width:600px){
-  .logo{font-size:2.1rem}
-  .catchphrase{font-size:.85rem}
-  .btn{font-size:.7rem;padding:7px 9px}
-  .vol{width:90px}
 }
