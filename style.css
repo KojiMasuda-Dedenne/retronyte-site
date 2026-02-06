@@ -19,8 +19,11 @@ body{
   overflow-x:hidden;
 }
 
-/* Header CRT shimmer */
+/* =========================
+   HEADER (CRT vibes)
+========================= */
 header{ position:relative; }
+
 header::after{
   content:"";
   position:absolute; inset:0;
@@ -43,6 +46,7 @@ header::after{
   text-shadow:0 0 12px var(--cyan),0 0 26px var(--mag);
   animation:headerFlicker 3.2s infinite;
 }
+
 .catchphrase{
   margin:0 0 1.1rem;
   color:var(--mag);
@@ -54,11 +58,15 @@ header::after{
   0%{ transform:translateY(-10px); }
   100%{ transform:translateY(10px); }
 }
+
 @keyframes headerFlicker{
   0%,19%,22%,62%,64%,100%{ opacity:1; }
   20%,63%{ opacity:.78; }
 }
 
+/* =========================
+   HOME PANEL (flicker)
+========================= */
 .home-section{
   max-width:980px;
   margin:0 auto 30px;
@@ -67,20 +75,24 @@ header::after{
   border-top:2px solid var(--cyan);
   border-bottom:2px solid var(--cyan);
   box-shadow:inset 0 0 18px rgba(0,255,255,.35);
-  animation:flicker 3.1s infinite;
+  animation:panelFlicker 3.1s infinite;
 }
-@keyframes flicker{
+
+@keyframes panelFlicker{
   0%,18%,22%,25%,53%,57%,100%{opacity:.92;}
   20%,24%,55%{opacity:.62;}
 }
 
+/* =========================
+   PLAYER SHELL
+========================= */
 .player-shell{
   max-width:980px;
   margin:0 auto;
   padding:0 10px;
 }
 
-/* Now playing ticker */
+/* Now Playing ticker */
 .ticker{
   overflow:hidden;
   white-space:nowrap;
@@ -90,23 +102,28 @@ header::after{
   background:rgba(0,0,0,.35);
   box-shadow:inset 0 0 10px rgba(0,255,255,.25);
 }
+
 .ticker span{
   display:inline-block;
   animation:scroll 14s linear infinite;
 }
+
 @keyframes scroll{
   from{transform:translateX(100%);}
   to{transform:translateX(-100%);}
 }
 
-/* Lightning wrapper exists, but is invisible unless playing */
+/* =========================
+   LIGHTNING FRAME
+   (ONLY while playing)
+========================= */
 .lightning-frame{
   position:relative;
   padding:10px;
   border-radius:18px;
 }
 
-/* OFF by default */
+/* default OFF */
 .lightning-frame::before,
 .lightning-frame::after{
   content:"";
@@ -117,36 +134,61 @@ header::after{
   opacity:0;
 }
 
-/* ON only while playing */
+/* ON while playing */
 body.playing .lightning-frame{
-  filter:drop-shadow(0 0 24px rgba(0,255,255,.7));
+  filter: drop-shadow(0 0 34px rgba(0,255,255,.85));
 }
+
 body.playing .lightning-frame::before{
-  opacity:.95;
+  opacity:1;
   border:3px solid transparent;
   background:linear-gradient(120deg,var(--cyan),var(--mag),var(--cyan)) border-box;
   mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
   mask-composite:exclude;
-  animation:lightningPulse 2.0s linear infinite;
+  animation: lightningPulseStrong 1.2s infinite;
 }
+
 body.playing .lightning-frame::after{
-  opacity:.8;
+  opacity:.9;
   inset:4px;
   border-radius:14px;
-  border:2px dashed rgba(0,255,255,.9);
-  animation:lightningFlicker .12s infinite alternate;
+  border:2px dashed rgba(0,255,255,.95);
+  animation: lightningFlicker .09s infinite alternate;
 }
 
-@keyframes lightningPulse{0%{opacity:.6}50%{opacity:1}100%{opacity:.6}}
-@keyframes lightningFlicker{from{opacity:.35}to{opacity:.85}}
+@keyframes lightningPulseStrong{
+  0%   { opacity:.55; filter: blur(0px); }
+  50%  { opacity:1;   filter: blur(.6px); }
+  100% { opacity:.55; filter: blur(0px); }
+}
 
+@keyframes lightningFlicker{
+  from{ opacity:.35; }
+  to{ opacity:.95; }
+}
+
+/* =========================
+   STAGE / VIDEO
+========================= */
 .stage{
   position:relative;
   aspect-ratio:16/9;
   background:black;
   border-radius:14px;
   overflow:hidden;
+}
+
+/* Episode switch transitions (JS toggles these) */
+.stage.fade-out{
+  opacity:0;
+  transform:scale(.995);
+  transition: opacity .22s ease, transform .22s ease;
+}
+.stage.fade-in{
+  opacity:1;
+  transform:scale(1);
+  transition: opacity .22s ease, transform .22s ease;
 }
 
 .video{
@@ -156,7 +198,7 @@ body.playing .lightning-frame::after{
   background:black;
 }
 
-/* Scanlines */
+/* Scanlines overlay */
 .scanlines{
   position:absolute;
   inset:0;
@@ -172,12 +214,40 @@ body.playing .lightning-frame::after{
   mix-blend-mode:screen;
   animation:scan 6s linear infinite;
 }
+
 @keyframes scan{
   0%{transform:translateY(-8px)}
   100%{transform:translateY(8px)}
 }
 
-/* Controls */
+/* Arcade PLAY overlay when paused/not playing */
+body:not(.playing) .stage::after{
+  content:"▶ PLAY";
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  padding:14px 18px;
+  border:2px solid var(--mag);
+  border-radius:14px;
+  background:rgba(0,0,0,.55);
+  color:var(--mag);
+  text-shadow:0 0 10px var(--mag), 0 0 14px var(--cyan);
+  box-shadow:0 0 18px rgba(255,0,255,.35);
+  font-size:0.9rem;
+  letter-spacing:1px;
+  pointer-events:none;
+  animation:playPulse 1.4s infinite;
+}
+
+@keyframes playPulse{
+  0%,100%{ opacity:.75; transform:translate(-50%,-50%) scale(1); }
+  50%{ opacity:1; transform:translate(-50%,-50%) scale(1.03); }
+}
+
+/* =========================
+   CONTROLS
+========================= */
 .controls{
   position:absolute;
   left:0; right:0; bottom:0;
@@ -187,6 +257,7 @@ body.playing .lightning-frame::after{
   padding:10px;
   background:linear-gradient(to top, rgba(0,0,0,.85), rgba(0,0,0,0));
 }
+
 .btn{
   font-family:inherit;
   font-size:.75rem;
@@ -197,15 +268,19 @@ body.playing .lightning-frame::after{
   border-radius:10px;
   cursor:pointer;
 }
+
 .btn:hover{
   border-color:var(--mag);
   box-shadow:0 0 12px rgba(255,0,255,.35);
 }
+
 .seek{ flex:1; accent-color:var(--mag); }
 .vol{ width:110px; accent-color:var(--cyan); }
 .time{ font-size:.65rem; color:var(--text); }
 
-/* Meta + playlist */
+/* =========================
+   META + PLAYLIST
+========================= */
 .meta{
   display:flex;
   justify-content:space-between;
@@ -213,7 +288,9 @@ body.playing .lightning-frame::after{
   gap:12px;
   padding:12px 6px 18px;
 }
+
 .meta-sub{ font-size:.65rem; color:var(--muted); }
+
 .pill{
   font-size:.65rem;
   padding:8px 10px;
@@ -222,12 +299,14 @@ body.playing .lightning-frame::after{
   color:#ffd6ff;
   box-shadow:0 0 12px rgba(255,0,255,.25);
 }
+
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
   gap:14px;
   margin-bottom:40px;
 }
+
 .card{
   text-align:left;
   border:2px solid var(--cyan);
@@ -236,10 +315,15 @@ body.playing .lightning-frame::after{
   padding:12px;
   cursor:pointer;
 }
+
 .card.active{ border-color:var(--mag); }
+
 .card .ctitle{ font-size:.75rem; margin-bottom:8px; }
 .card .crid{ font-size:.6rem; color:var(--muted); }
 
+/* =========================
+   FOOTER
+========================= */
 footer{
   margin:26px 0 18px;
   font-size:.7rem;
