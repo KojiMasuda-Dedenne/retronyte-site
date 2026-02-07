@@ -1,172 +1,248 @@
 const el = {
+  stage: document.getElementById("stage"),
   video: document.getElementById("video"),
+  pausePoster: document.getElementById("pausePoster"),
   overlayPlay: document.getElementById("overlayPlay"),
-  btnPlay: document.getElementById("btnPlay"),
+
+  epTitle: document.getElementById("epTitle"),
+  ridPill: document.getElementById("ridPill"),
+  subline: document.getElementById("subline"),
+  ticker: document.getElementById("ticker"),
+
+  grid: document.getElementById("grid"),
+
   btnPrev: document.getElementById("btnPrev"),
+  btnBack: document.getElementById("btnBack"),
+  btnPlay: document.getElementById("btnPlay"),
+  btnFwd: document.getElementById("btnFwd"),
   btnNext: document.getElementById("btnNext"),
-  btnFs: document.getElementById("btnFs"),
+
   seek: document.getElementById("seek"),
   vol: document.getElementById("vol"),
-  time: document.getElementById("time"),
-  title: document.getElementById("title"),
-  ridPill: document.getElementById("ridPill"),
-  grid: document.getElementById("grid"),
+  timeNow: document.getElementById("timeNow"),
+  timeDur: document.getElementById("timeDur"),
 };
 
-let LIB = [];
-let idx = 0;
-let seeking = false;
+let library = [];
+let currentIndex = 0;
 
 function fmtTime(s){
-  if (!isFinite(s)) return "0:00";
-  s = Math.max(0, Math.floor(s));
+  if (!isFinite(s) || s < 0) return "0:00";
   const m = Math.floor(s / 60);
-  const r = s % 60;
+  const r = Math.floor(s % 60);
   return `${m}:${String(r).padStart(2,"0")}`;
 }
 
-function setPlayingUI(isPlaying){
-  document.body.classList.toggle("is-playing", !!isPlaying);
+function setTicker(msg){
+  el.ticker.textContent = msg || "";
 }
 
-function setURL(rid){
-  const u = new URL(window.location.href);
-  u.searchParams.set("v", rid);
-  history.replaceState({}, "", u.toString());
+function setStageState({ playing, paused }) {
+  el.stage.classList.toggle("playing", !!playing);
+  el.stage.classList.toggle("paused", !!paused);
 }
 
-function loadVideoByIndex(i, autoplay=false){
-  if (!LIB.length) return;
+function applyPausePoster(v){
+  // If poster exists, use it for the pause overlay image
+  if (v?.poster) {
+    el.pausePoster.src = v.poster;
+  } else {
+    el.pausePoster.removeAttribute("src");
+  }
+}
 
-  idx = (i + LIB.length) % LIB.length;
-  const v = LIB[idx];
-
+function loadVideo(v, autoplay = false){
   if (!v || !v.src){
-    el.title.textContent = "Missing video src in videos/library.json";
+    el.epTitle.textContent = "Missing video src in library.json";
     el.ridPill.textContent = "RID: —";
+    setTicker("⚠ Could not load this episode.");
     return;
   }
 
-  // update UI text (no “Internet Archive” anywhere)
-  el.title.textContent = v.title || "Retronyte Episode";
+  // set metadata
+  el.epTitle.textContent = v.title || "Retronyte Episode";
   el.ridPill.textContent = `RID: ${v.rid || "—"}`;
 
-  // poster
-  el.video.poster = v.poster || "";
+  // hide any “Internet Archive” mention
+  el.subline.textContent = v.subtitle || "";
 
-  // stop -> set source -> load
-  setPlayingUI(false);
+  // load video
   el.video.pause();
   el.video.src = v.src;
+
+  // poster for initial load (browser will show before first play)
+  if (v.poster) el.video.poster = v.poster;
+  else el.video.removeAttribute("poster");
+
+  applyPausePoster(v);
+
+  // initial stage UI: paused poster visible + overlay visible
+  setStageState({ playing:false, paused:true });
+  setTicker(`♫ Ready: ${v.title || "Episode"}`);
+
   el.video.load();
 
-  // update URL param
-  if (v.rid) setURL(v.rid);
-
-  // autoplay optional
-  if (autoplay){
+  if (autoplay) {
+    // play after metadata is ready (more reliable)
     el.video.play().catch(()=>{});
   }
 }
 
-function currentRIDFromURL(){
-  const u = new URL(window.location.href);
-  return u.searchParams.get("v");
+function playPause(){
+  if (el.video.paused) el.video.play().catch(()=>{});
+  else el.video.pause();
+}
+
+function seekToRatio(r){
+  if (!isFinite(el.video.duration) || el.video.duration <= 0) return;
+  el.video.currentTime = el.video.duration * r;
 }
 
 function renderGrid(){
   el.grid.innerHTML = "";
-  LIB.forEach((v, i) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <p class="card-title">${v.title || "Untitled"}</p>
-      <p class="card-rid">RID: ${v.rid || "—"}</p>
+  library.forEach((v, idx) => {
+    const tile = document.createElement("button");
+    tile.type = "button";
+    tile.className = "tile";
+    tile.innerHTML = `
+      <div class="tile-title">${escapeHtml(v.title || v.rid || "Episode")}</div>
+      <div class="tile-rid">RID: ${escapeHtml(v.rid || "—")}</div>
     `;
-    card.addEventListener("click", () => loadVideoByIndex(i, true));
-    el.grid.appendChild(card);
+    tile.addEventListener("click", () => {
+      currentIndex = idx;
+      loadVideo(library[currentIndex], true);
+      // update URL so sharing works
+      setURL(library[currentIndex].rid);
+    });
+    el.grid.appendChild(tile);
   });
 }
+
+function setURL(rid){
+  const u = new URL(window.location.href);
+  if (rid) u.searchParams.set("v", rid);
+  else u.searchParams.delete("v");
+  history.replaceState({}, "", u.toString());
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, (m) => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[m]));
+}
+
+/* ---------- Events ---------- */
+
+// Overlay play button
+el.overlayPlay.addEventListener("click", () => {
+  el.video.play().catch(()=>{});
+});
+
+// Clicking stage toggles play/pause (nice arcade feel)
+el.stage.addEventListener("click", (e) => {
+  // don't double-trigger if you clicked the overlay button itself
+  if (e.target === el.overlayPlay || el.overlayPlay.contains(e.target)) return;
+  playPause();
+});
+
+// Spacebar play/pause (unless typing)
+document.addEventListener("keydown", (e) => {
+  if (e.code !== "Space") return;
+
+  const tag = (document.activeElement?.tagName || "").toLowerCase();
+  const typing = tag === "input" || tag === "textarea" || document.activeElement?.isContentEditable;
+  if (typing) return;
+
+  e.preventDefault();
+  playPause();
+});
+
+// Video state -> stage classes + pause-poster overlay behavior
+el.video.addEventListener("play", () => {
+  setStageState({ playing:true, paused:false });
+  setTicker(`♫ Now Playing: ${el.epTitle.textContent}`);
+});
+el.video.addEventListener("pause", () => {
+  // show pause poster overlay (fake “thumbnail returns”)
+  setStageState({ playing:false, paused:true });
+  setTicker(`⏸ Paused: ${el.epTitle.textContent}`);
+});
+el.video.addEventListener("ended", () => {
+  setStageState({ playing:false, paused:true });
+  setTicker(`■ Finished: ${el.epTitle.textContent}`);
+});
+
+// Controls
+el.btnPlay.addEventListener("click", playPause);
+el.btnBack.addEventListener("click", () => el.video.currentTime = Math.max(0, el.video.currentTime - 10));
+el.btnFwd.addEventListener("click", () => el.video.currentTime = Math.min(el.video.duration || 0, el.video.currentTime + 10));
+
+el.btnPrev.addEventListener("click", () => {
+  if (!library.length) return;
+  currentIndex = (currentIndex - 1 + library.length) % library.length;
+  loadVideo(library[currentIndex], true);
+  setURL(library[currentIndex].rid);
+});
+el.btnNext.addEventListener("click", () => {
+  if (!library.length) return;
+  currentIndex = (currentIndex + 1) % library.length;
+  loadVideo(library[currentIndex], true);
+  setURL(library[currentIndex].rid);
+});
+
+// Seek bar
+el.seek.addEventListener("input", () => {
+  const r = Number(el.seek.value) / 1000;
+  seekToRatio(r);
+});
+
+// Volume
+el.vol.addEventListener("input", () => {
+  el.video.volume = Number(el.vol.value);
+});
+
+// Time update
+el.video.addEventListener("timeupdate", () => {
+  const d = el.video.duration || 0;
+  const t = el.video.currentTime || 0;
+
+  el.timeNow.textContent = fmtTime(t);
+  el.timeDur.textContent = fmtTime(d);
+
+  if (d > 0) {
+    const r = Math.max(0, Math.min(1, t / d));
+    el.seek.value = String(Math.floor(r * 1000));
+  }
+});
+
+/* ---------- Boot ---------- */
 
 async function loadLibrary(){
-  // cache-bust the JSON so GitHub Pages updates faster
-  const res = await fetch(`videos/library.json?cb=${Date.now()}`);
-  if (!res.ok) throw new Error("Failed to load videos/library.json");
-  const data = await res.json();
+  // cache-bust library fetch too
+  const url = `videos/library.json?v=${Date.now()}`;
 
-  if (!Array.isArray(data)) throw new Error("library.json must be an array");
-  LIB = data;
-
-  renderGrid();
-
-  // choose initial based on URL
-  const rid = currentRIDFromURL();
-  const found = rid ? LIB.findIndex(x => x.rid === rid) : -1;
-  loadVideoByIndex(found >= 0 ? found : 0, false);
-}
-
-function bindControls(){
-  el.overlayPlay.addEventListener("click", () => {
-    el.video.play().catch(()=>{});
-  });
-
-  el.btnPlay.addEventListener("click", () => {
-    if (el.video.paused) el.video.play().catch(()=>{});
-    else el.video.pause();
-  });
-
-  el.btnPrev.addEventListener("click", () => loadVideoByIndex(idx - 1, true));
-  el.btnNext.addEventListener("click", () => loadVideoByIndex(idx + 1, true));
-
-  el.vol.addEventListener("input", () => {
-    el.video.volume = Number(el.vol.value || 0.85);
-  });
-  el.video.volume = Number(el.vol.value || 0.85);
-
-  el.seek.addEventListener("input", () => {
-    seeking = true;
-  });
-  el.seek.addEventListener("change", () => {
-    const t = (Number(el.seek.value) / 1000) * (el.video.duration || 0);
-    if (isFinite(t)) el.video.currentTime = t;
-    seeking = false;
-  });
-
-  el.btnFs.addEventListener("click", () => {
-    const stage = document.getElementById("stage");
-    if (!document.fullscreenElement){
-      stage.requestFullscreen?.();
-    } else {
-      document.exitFullscreen?.();
-    }
-  });
-
-  // video events
-  el.video.addEventListener("play", () => setPlayingUI(true));
-  el.video.addEventListener("pause", () => setPlayingUI(false));
-  el.video.addEventListener("ended", () => {
-    setPlayingUI(false);
-    // auto-next feels arcade
-    loadVideoByIndex(idx + 1, true);
-  });
-
-  el.video.addEventListener("timeupdate", () => {
-    const cur = el.video.currentTime || 0;
-    const dur = el.video.duration || 0;
-    el.time.textContent = `${fmtTime(cur)} / ${fmtTime(dur)}`;
-
-    if (!seeking && dur > 0){
-      el.seek.value = String(Math.floor((cur / dur) * 1000));
-    }
-  });
-}
-
-(async function init(){
-  bindControls();
   try{
-    await loadLibrary();
-  }catch(err){
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    if (!Array.isArray(data)) throw new Error("library.json must be an array");
+    library = data;
+
+    renderGrid();
+
+    // choose episode by ?v=RID if present
+    const params = new URLSearchParams(location.search);
+    const rid = params.get("v");
+    const idx = rid ? library.findIndex(x => x.rid === rid) : -1;
+
+    currentIndex = idx >= 0 ? idx : 0;
+    loadVideo(library[currentIndex], false);
+  } catch(err){
+    el.epTitle.textContent = "Could not load playlist (videos/library.json).";
+    setTicker(String(err));
     console.error(err);
-    el.title.textContent = "Could not load playlist (videos/library.json).";
   }
-})();
+}
+
+loadLibrary();

@@ -3,81 +3,85 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Retronyte</title>
+  <title>Retronyte — Plug In • Power Up • Play On</title>
 
-  <!-- Cache-bust (change the number when you update files) -->
-  <link rel="stylesheet" href="style.css?v=9001" />
+  <!-- cache-bust -->
+  <link rel="stylesheet" href="style.css?v=20260206_3" />
 </head>
 
 <body>
-  <header class="top">
+  <header class="site-header">
     <div class="brand">
       <img class="brand-logo" src="assets/logo.png" alt="Retronyte" />
-      <div class="brand-tagline flicker-soft">
-        Plug In <span class="dot">•</span> Power Up <span class="dot">•</span> Play On
-      </div>
+      <div class="brand-tagline" aria-hidden="true">PLUG IN • POWER UP • PLAY ON</div>
     </div>
 
-    <nav class="nav">
+    <nav class="topnav">
       <a href="./">Home</a>
-      <a href="https://discord.com/" target="_blank" rel="noreferrer">Join Discord</a>
+      <a href="https://discord.gg/YOUR_INVITE" target="_blank" rel="noreferrer">Join Discord</a>
     </nav>
   </header>
 
   <main class="wrap">
-    <section class="panel">
-      <h2 class="panel-title"><span class="bolt">⚡</span> Retronyte Online <span class="bolt">⚡</span></h2>
-      <p class="panel-sub">Featured episodes playable directly on Retronyte.</p>
+    <section class="card hero">
+      <div class="hero-title">⚡ Retronyte Online ⚡</div>
+      <div class="hero-sub">Featured episodes playable directly on Retronyte.</div>
     </section>
 
     <section class="player-shell" id="player">
       <div class="stage" id="stage">
+        <!-- Lightning frame (only while playing) -->
+        <div class="lightning-frame" aria-hidden="true"></div>
+
+        <!-- Paused “poster comes back” overlay -->
+        <img id="pausePoster" class="pause-poster" alt="" />
+
         <video
           id="video"
           class="video"
           playsinline
           preload="metadata"
-          poster=""
         ></video>
 
-        <!-- Lightning frame (PNG) - doesn't block clicks -->
-        <div class="lightning-frame" aria-hidden="true"></div>
-
-        <!-- Arcade overlay (shows when paused/not started) -->
-        <button class="overlay-play" id="overlayPlay" type="button" aria-label="Play">
-          <span class="overlay-play-icon">▶</span>
-          <span class="overlay-play-text">PLAY</span>
+        <!-- Arcade overlay play button -->
+        <button id="overlayPlay" class="overlay-play" type="button" aria-label="Play">
+          <span class="triangle">▶</span>
+          <span class="label">PLAY</span>
         </button>
       </div>
 
-      <div class="meta">
-        <div class="title" id="title">Loading…</div>
-        <div class="rid" id="ridPill">RID: —</div>
+      <div class="player-meta">
+        <div class="titleline">
+          <div id="epTitle" class="ep-title">Loading…</div>
+          <div id="ridPill" class="rid-pill">RID: —</div>
+        </div>
+        <div class="subline" id="subline"></div>
       </div>
 
       <div class="controls">
-        <button class="btn" id="btnPlay" type="button">⏯</button>
-        <button class="btn" id="btnPrev" type="button">⏮</button>
-        <button class="btn" id="btnNext" type="button">⏭</button>
+        <button class="btn" id="btnPrev" title="Previous">⏮</button>
+        <button class="btn" id="btnBack" title="-10s">⏪</button>
+        <button class="btn" id="btnPlay" title="Play/Pause">⏯</button>
+        <button class="btn" id="btnFwd" title="+10s">⏩</button>
+        <button class="btn" id="btnNext" title="Next">⏭</button>
 
-        <div class="time" id="time">0:00 / 0:00</div>
+        <div class="time" id="timeNow">0:00</div>
+        <input id="seek" class="seek" type="range" min="0" max="1000" value="0" />
+        <div class="time" id="timeDur">0:00</div>
 
-        <input class="seek" id="seek" type="range" min="0" max="1000" value="0" />
-        <input class="vol" id="vol" type="range" min="0" max="1" step="0.01" value="0.85" />
-
-        <button class="btn" id="btnFs" type="button">⛶</button>
+        <input id="vol" class="vol" type="range" min="0" max="1" step="0.01" value="0.9" />
       </div>
+
+      <div class="ticker" id="ticker"></div>
     </section>
 
-    <section class="library">
-      <h3 class="library-title">Episode Library</h3>
-      <div class="grid" id="grid"></div>
-    </section>
+    <h2 class="library-title">Episode Library</h2>
+    <div class="grid" id="grid"></div>
   </main>
 
   <footer class="footer">© 2026 Retronyte</footer>
 
-  <!-- Cache-bust -->
-  <script src="script.js?v=9001"></script>
+  <!-- cache-bust -->
+  <script src="script.js?v=20260206_3"></script>
 </body>
 </html>
