@@ -2,112 +2,156 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 
-/* BASE */
-body {
+body{
   font-family: monospace;
-  color: #c9fbff;
-  background: linear-gradient(180deg, #02030a, #05060b);
-  text-align: center;
+  color:#c9fbff;
+  text-align:center;
+  background:
+    radial-gradient(60% 60% at 50% 20%, rgba(85,0,130,.25), transparent 60%),
+    radial-gradient(70% 70% at 50% 60%, rgba(0,180,200,.20), transparent 65%),
+    linear-gradient(180deg, #02030a, #05060b);
 }
 
 /* HEADER */
-.boot-header {
+.boot-header{
   margin-top: 40px;
 }
 
-.boot-logo {
-  width: min(600px, 90vw);
-  display: block;
+.boot-logo{
+  width: min(680px, 92vw);
+  display:block;
   margin: 0 auto;
+  filter: drop-shadow(0 0 22px rgba(255,230,120,.35));
+  animation: logoFlicker 3.2s infinite steps(1, end);
 }
 
-.boot-tagline {
-  margin-top: 12px;
-  font-size: 28px;
+@keyframes logoFlicker{
+  0%, 100% { filter: drop-shadow(0 0 24px rgba(255,230,120,.38)); transform: translateZ(0); }
+  6% { filter: drop-shadow(0 0 34px rgba(255,240,160,.55)); }
+  7% { filter: drop-shadow(0 0 18px rgba(255,230,120,.28)); }
+  22% { filter: drop-shadow(0 0 30px rgba(255,240,160,.50)); }
+  23% { filter: drop-shadow(0 0 20px rgba(255,230,120,.30)); }
+  56% { filter: drop-shadow(0 0 36px rgba(255,245,180,.62)); }
+  57% { filter: drop-shadow(0 0 22px rgba(255,230,120,.35)); }
+}
+
+/* PURPLE TEXT */
+.boot-tagline{
+  margin-top: 14px;
+  font-size: 30px;
   letter-spacing: 4px;
   color: #c77dff;
+  text-shadow: 0 0 12px rgba(199,125,255,.45);
 }
 
-.boot-insert {
+/* INSERT CARTRIDGE */
+.boot-insert{
   margin-top: 8px;
-  font-size: 22px;
-  color: #a855f7;
+  font-size: 24px;
+  letter-spacing: 2px;
+  color: #b26bff;
+  text-shadow: 0 0 10px rgba(178,107,255,.45);
+}
+
+/* Independent flickers */
+.flicker-purple{
+  animation: purpleFlicker 2.4s infinite steps(1, end);
+  pointer-events: none; /* NEVER blocks clicks */
+}
+@keyframes purpleFlicker{
+  0%,100%{ opacity:1; }
+  8%{ opacity:.72; }
+  9%{ opacity:1; }
+  33%{ opacity:.80; }
+  34%{ opacity:1; }
+  66%{ opacity:.68; }
+  67%{ opacity:1; }
+}
+
+.flicker-insert{
+  animation: insertFlicker 1.35s infinite steps(1, end);
+  pointer-events: none;
+}
+@keyframes insertFlicker{
+  0%,100%{ opacity:1; }
+  50%{ opacity:.20; }
 }
 
 /* MAIN WRAP */
-.wrap {
-  width: min(900px, 94vw);
-  margin: 40px auto;
+.wrap{
+  width: min(920px, 94vw);
+  margin: 34px auto 60px;
 }
 
-/* CLEAN PLAYER — NO EFFECTS */
-.player-shell {
-  margin-bottom: 30px;
+/* PLAYER — CLEAN (NO OVERLAYS / NO BEZEL) */
+.player-shell{
+  margin: 18px auto 30px;
 }
 
-.stage {
-  background: black;
+.stage{
+  background: #000;
   aspect-ratio: 16 / 9;
   border-radius: 16px;
   overflow: hidden;
-  border: 1px solid rgba(24,243,255,.25);
+  border: 1px solid rgba(24,243,255,.22);
 }
 
-.video {
-  width: 100%;
-  height: 100%;
-  display: block;
+.video{
+  width:100%;
+  height:100%;
+  display:block;
   object-fit: contain;
 }
 
 /* META */
-.meta {
+.meta{
   margin-top: 10px;
-  display: flex;
+  display:flex;
   justify-content: space-between;
+  align-items:center;
+  gap: 12px;
   font-size: 14px;
 }
 
-.title { color: #9ffcff; }
-.rid {
-  color: #ffd8ff;
+.title{ color:#9ffcff; }
+
+.rid{
+  color:#ffd8ff;
   border: 1px solid rgba(199,125,255,.45);
   padding: 4px 10px;
   border-radius: 999px;
+  white-space: nowrap;
+}
+
+.status{
+  margin-top: 10px;
+  font-size: 12px;
+  opacity: .8;
+  color: #9ffcff;
+  min-height: 18px;
 }
 
 /* PLAYLIST */
-.library {
-  margin-top: 30px;
-}
+.library{ margin-top: 26px; }
+.lib-title{ margin: 0 0 12px; color:#9ffcff; }
 
-.lib-title {
-  margin-bottom: 12px;
-  color: #9ffcff;
-}
-
-.grid {
-  display: grid;
+.grid{
+  display:grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 12px;
+  gap:12px;
 }
 
-.card {
+.card{
   padding: 12px;
-  border: 1px solid rgba(24,243,255,.25);
   border-radius: 12px;
-  cursor: pointer;
+  border: 1px solid rgba(24,243,255,.22);
+  cursor:pointer;
+  background: rgba(0,0,0,.15);
 }
 
-.card:hover {
-  border-color: #c77dff;
+.card:hover{
+  border-color:#c77dff;
 }
 
-.card-title {
-  font-weight: bold;
-}
-
-.card-rid {
-  font-size: 12px;
-  opacity: .7;
-}
+.card-title{ font-weight:bold; color:#c9fbff; }
+.card-rid{ font-size:12px; opacity:.7; color:#ffd8ff; margin-top:6px; }

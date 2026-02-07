@@ -4,22 +4,24 @@
   <meta charset="UTF-8" />
   <title>Retronyte</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css?v=clean1" />
+  <link rel="stylesheet" href="style.css?v=cb1" />
 </head>
 
 <body>
-
-  <!-- HEADER / BRANDING -->
   <header class="boot-header">
     <img src="assets/logo.png" class="boot-logo" alt="Retronyte Logo" />
-    <div class="boot-tagline">PLUG IN • POWER UP • PLAY ON</div>
-    <div class="boot-insert">INSERT CARTRIDGE</div>
+
+    <div class="boot-tagline flicker-purple">
+      PLUG IN • POWER UP • PLAY ON
+    </div>
+
+    <div class="boot-insert flicker-insert">
+      INSERT CARTRIDGE
+    </div>
   </header>
 
-  <!-- MAIN CONTENT -->
   <main class="wrap">
 
-    <!-- VIDEO PLAYER (CLEAN, NO EFFECTS) -->
     <section class="player-shell">
       <div class="stage">
         <video
@@ -35,9 +37,10 @@
         <div id="title" class="title">Loading…</div>
         <div id="ridPill" class="rid">RID: —</div>
       </div>
+
+      <div id="status" class="status"></div>
     </section>
 
-    <!-- PLAYLIST -->
     <section class="library">
       <h2 class="lib-title">Episode Library</h2>
       <div id="grid" class="grid"></div>
@@ -45,6 +48,6 @@
 
   </main>
 
-  <script src="script.js?v=clean1"></script>
+  <script src="script.js?v=cb1"></script>
 </body>
 </html>
