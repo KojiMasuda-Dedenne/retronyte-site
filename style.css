@@ -1,260 +1,113 @@
-:root{
-  --bg1:#02030a;
-  --bg2:#05060b;
-  --cyan:#18f3ff;
-  --mag:#c77dff;
-  --mag2:#a855f7;
-  --text:#c9fbff;
+/* RESET */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
 
-  --radius:16px;
-
-  /* bezel tuning */
-  --bezelInset: 3px;     /* thin */
-  --bezelBlur: 6px;      /* glow softness */
+/* BASE */
+body {
+  font-family: monospace;
+  color: #c9fbff;
+  background: linear-gradient(180deg, #02030a, #05060b);
+  text-align: center;
 }
 
-*{ box-sizing:border-box; }
-html,body{ height:100%; }
-
-body{
-  margin:0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  color: var(--text);
-  background:
-    radial-gradient(900px 480px at 50% 10%, rgba(24,243,255,.05), transparent 62%),
-    radial-gradient(700px 420px at 50% 45%, rgba(199,125,255,.04), transparent 68%),
-    linear-gradient(180deg, var(--bg1), var(--bg2) 40%, #02020a);
+/* HEADER */
+.boot-header {
+  margin-top: 40px;
 }
 
-/* ---------------- BOOT HEADER (ALWAYS ON) ---------------- */
-.boot-header{
-  position: relative;
-  padding: 34px 18px 14px;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-}
-
-.boot-wrap{
-  text-align:center;
-  pointer-events:none; /* IMPORTANT: never blocks clicks anywhere */
-}
-
-/* LOGO: centered + larger + subtle flicker */
-.boot-logo{
-  width: min(760px, 92vw);
-  height:auto;
-  display:block;
+.boot-logo {
+  width: min(600px, 90vw);
+  display: block;
   margin: 0 auto;
-  filter: drop-shadow(0 0 18px rgba(255,230,120,.55));
-  animation: logoFlicker 4.9s infinite steps(1,end), logoPulse 1.6s infinite ease-in-out;
 }
 
-@keyframes logoFlicker{
-  0%, 90%, 100% { opacity: 1; }
-  91% { opacity: .60; }
-  92% { opacity: 1; }
-  97% { opacity: .78; }
-  98% { opacity: 1; }
-}
-
-@keyframes logoPulse{
-  0%,100% { filter: drop-shadow(0 0 18px rgba(255,230,120,.52)); }
-  50%     { filter: drop-shadow(0 0 26px rgba(255,240,150,.75)); }
-}
-
-/* PURPLE TEXT: bigger + directly under logo + independent flicker */
-.boot-tagline{
-  margin-top: 14px;
-  font-size: clamp(26px, 2.4vw, 38px);
+.boot-tagline {
+  margin-top: 12px;
+  font-size: 28px;
   letter-spacing: 4px;
-  color: var(--mag);
-  text-shadow: 0 0 16px rgba(199,125,255,.60);
-  animation: purpleFlicker 4.2s infinite steps(1,end);
+  color: #c77dff;
 }
 
-@keyframes purpleFlicker{
-  0%, 88%, 100% { opacity: 1; }
-  89% { opacity: .35; }
-  90% { opacity: 1; }
-  96% { opacity: .65; }
-  97% { opacity: 1; }
+.boot-insert {
+  margin-top: 8px;
+  font-size: 22px;
+  color: #a855f7;
 }
 
-/* INSERT CARTRIDGE: below purple text + flicker/blink */
-.boot-insert{
-  margin-top: 10px;
-  font-size: clamp(20px, 2.0vw, 32px);
-  letter-spacing: 3px;
-  color: var(--mag2);
-  text-shadow: 0 0 14px rgba(168,85,247,.60);
-  animation: insertBlink 1.2s infinite steps(2,end);
+/* MAIN WRAP */
+.wrap {
+  width: min(900px, 94vw);
+  margin: 40px auto;
 }
 
-@keyframes insertBlink{
-  0%,100% { opacity: 1; }
-  50%     { opacity: .15; }
+/* CLEAN PLAYER — NO EFFECTS */
+.player-shell {
+  margin-bottom: 30px;
 }
 
-/* nav pinned top-right (boot doesn't block clicks because pointer-events none is only on boot-wrap) */
-.topnav{
-  position: fixed;
-  top: 14px;
-  right: 14px;
-  z-index: 50;
-  display:flex;
-  gap: 10px;
-}
-.topnav a{
-  pointer-events:auto;
-  color: #bffcff;
-  text-decoration:none;
-  font-size: 12px;
-  padding: 8px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(24,243,255,.25);
-  background: rgba(0,0,0,.35);
-}
-.topnav a:hover{ border-color: rgba(199,125,255,.35); }
-
-/* ---------------- MAIN LAYOUT ---------------- */
-.wrap{
-  width: min(980px, 94vw);
-  margin: 0 auto;
-  padding: 10px 0 80px;
-}
-
-.panel{
-  border-radius: 14px;
-  border: 1px solid rgba(24,243,255,.18);
-  background: rgba(0,0,0,.25);
-  padding: 14px 16px;
-  box-shadow: 0 0 26px rgba(24,243,255,.06);
-  margin-bottom: 18px;
-}
-.panel-title{ font-weight: 700; color: #9ffcff; }
-.panel-sub{ margin-top: 6px; font-size: 12px; color: rgba(201,251,255,.70); }
-
-/* ---------------- PLAYER + THIN LIVE BEZEL ---------------- */
-.player-shell{
-  position: relative;
-}
-
-/* The bezel wraps ONLY this stage box */
-.stage{
-  position: relative;
-  border-radius: var(--radius);
-  overflow: hidden;
+.stage {
+  background: black;
   aspect-ratio: 16 / 9;
-  background: #000;
-  border: 1px solid rgba(24,243,255,.18);
-  box-shadow: 0 0 20px rgba(24,243,255,.06);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(24,243,255,.25);
 }
 
-/* THIN LIGHTNING BEZEL (pure css, never blocks input) */
-.stage::before{
-  content:"";
-  position:absolute;
-  inset: calc(-1 * var(--bezelInset)); /* thin ring outward */
-  border-radius: calc(var(--radius) + var(--bezelInset));
-  pointer-events:none;  /* IMPORTANT */
-  opacity: .9;
-  z-index: 5;
-
-  /* live current: conic + flicker + pulse */
-  background:
-    conic-gradient(
-      rgba(255,255,180,0) 0deg,
-      rgba(255,255,180,.90) 35deg,
-      rgba(255,255,180,0) 90deg,
-      rgba(255,255,180,.80) 155deg,
-      rgba(255,255,180,0) 220deg,
-      rgba(255,255,180,.92) 295deg,
-      rgba(255,255,180,0) 360deg
-    );
-
-  filter: blur(var(--bezelBlur));
-  animation: bezelSpin 2.6s linear infinite, bezelPulse 1.35s ease-in-out infinite;
-}
-
-@keyframes bezelSpin{ to { transform: rotate(360deg); } }
-@keyframes bezelPulse{
-  0%,100% { opacity: .45; }
-  50%     { opacity: 1; }
-}
-
-/* video */
-.video{
+.video {
   width: 100%;
   height: 100%;
-  display:block;
-  background:#000;
+  display: block;
   object-fit: contain;
 }
 
-/* PLAY overlay (doesn't block controls because it's small; also hidden once playing) */
-.overlay-play{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform: translate(-50%,-50%);
-  z-index: 10;
-  padding: 12px 18px;
-  border-radius: 999px;
-  border: 1px solid rgba(199,125,255,.65);
-  background: rgba(0,0,0,.35);
-  color: #ffd8ff;
-  cursor:pointer;
-  display:flex;
-  gap: 10px;
-  align-items:center;
-  letter-spacing: 3px;
-  font-weight: 700;
-  animation: playBlink 1.2s infinite steps(2,end);
+/* META */
+.meta {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
 }
-@keyframes playBlink{
-  0%,60%,100%{ opacity:1; }
-  61%{ opacity:.55; }
-  62%{ opacity:1; }
-}
-.overlay-ic{ color: var(--cyan); }
 
-.stage.is-playing .overlay-play{ display:none; }
-
-/* meta */
-.meta{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap: 10px;
-  margin-top: 12px;
-}
-.title{ color: #9ffcff; }
-.rid{
+.title { color: #9ffcff; }
+.rid {
   color: #ffd8ff;
   border: 1px solid rgba(199,125,255,.45);
-  background: rgba(0,0,0,.25);
-  padding: 6px 10px;
+  padding: 4px 10px;
   border-radius: 999px;
-  font-size: 12px;
 }
 
-/* library */
-.library{ margin-top: 18px; }
-.lib-title{ margin: 0 0 10px; color: #9ffcff; font-size: 14px; }
+/* PLAYLIST */
+.library {
+  margin-top: 30px;
+}
 
-.grid{
-  display:grid;
+.lib-title {
+  margin-bottom: 12px;
+  color: #9ffcff;
+}
+
+.grid {
+  display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 12px;
 }
-.card{
-  border-radius: 14px;
-  border: 1px solid rgba(24,243,255,.18);
-  background: rgba(0,0,0,.28);
+
+.card {
   padding: 12px;
-  cursor:pointer;
+  border: 1px solid rgba(24,243,255,.25);
+  border-radius: 12px;
+  cursor: pointer;
 }
-.card:hover{ border-color: rgba(199,125,255,.35); }
-.card-title{ font-weight:700; color:#bffcff; margin-bottom:4px; }
-.card-rid{ color:#ffd8ff; opacity:.75; font-size: 12px; }
+
+.card:hover {
+  border-color: #c77dff;
+}
+
+.card-title {
+  font-weight: bold;
+}
+
+.card-rid {
+  font-size: 12px;
+  opacity: .7;
+}

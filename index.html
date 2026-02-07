@@ -1,58 +1,50 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
   <title>Retronyte</title>
-  <link rel="stylesheet" href="style.css?v=cb9012" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css?v=clean1" />
 </head>
 
 <body>
-  <!-- BOOT HEADER (STAYS FOREVER, NOT A SPLASH SCREEN) -->
+
+  <!-- HEADER / BRANDING -->
   <header class="boot-header">
-    <div class="boot-wrap">
-      <img src="assets/logo.png" class="boot-logo" alt="Retronyte" />
-
-      <div class="boot-tagline">PLUG IN • POWER UP • PLAY ON</div>
-      <div class="boot-insert">INSERT CARTRIDGE</div>
-    </div>
-
-    <nav class="topnav">
-      <a href="./">Home</a>
-      <a href="https://discord.gg/juqwaTpX" target="_blank" rel="noreferrer">Join Discord</a>
-    </nav>
+    <img src="assets/logo.png" class="boot-logo" alt="Retronyte Logo" />
+    <div class="boot-tagline">PLUG IN • POWER UP • PLAY ON</div>
+    <div class="boot-insert">INSERT CARTRIDGE</div>
   </header>
 
+  <!-- MAIN CONTENT -->
   <main class="wrap">
-    <section class="panel">
-      <div class="panel-title">⚡ Retronyte Online ⚡</div>
-      <div class="panel-sub">Featured episodes playable directly on Retronyte.</div>
-    </section>
 
-    <!-- PLAYER (BEZEL LIGHTNING WRAPS THIS BOX ONLY) -->
-    <section class="player-shell" id="playerShell">
-      <div class="stage" id="stage">
-        <video id="video" class="video" playsinline preload="metadata" controls></video>
-
-        <!-- arcade overlay play (optional, doesn't block controls) -->
-        <button id="overlayPlay" class="overlay-play" type="button" aria-label="Play">
-          <span class="overlay-ic">▶</span>
-          <span class="overlay-txt">PLAY</span>
-        </button>
+    <!-- VIDEO PLAYER (CLEAN, NO EFFECTS) -->
+    <section class="player-shell">
+      <div class="stage">
+        <video
+          id="video"
+          class="video"
+          controls
+          playsinline
+          preload="metadata">
+        </video>
       </div>
 
       <div class="meta">
         <div id="title" class="title">Loading…</div>
         <div id="ridPill" class="rid">RID: —</div>
       </div>
-
-      <div class="library">
-        <h2 class="lib-title">Episode Library</h2>
-        <div id="grid" class="grid"></div>
-      </div>
     </section>
+
+    <!-- PLAYLIST -->
+    <section class="library">
+      <h2 class="lib-title">Episode Library</h2>
+      <div id="grid" class="grid"></div>
+    </section>
+
   </main>
 
-  <script src="script.js?v=cb9012"></script>
+  <script src="script.js?v=clean1"></script>
 </body>
 </html>
