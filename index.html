@@ -1,53 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Retronyte</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css?v=cb1" />
+  <link rel="stylesheet" href="./style.css?v=9011" />
 </head>
 
 <body>
-  <header class="boot-header">
-    <img src="assets/logo.png" class="boot-logo" alt="Retronyte Logo" />
-
-    <div class="boot-tagline flicker-purple">
-      PLUG IN • POWER UP • PLAY ON
-    </div>
-
-    <div class="boot-insert flicker-insert">
-      INSERT CARTRIDGE
-    </div>
-  </header>
-
   <main class="wrap">
-
-    <section class="player-shell">
-      <div class="stage">
-        <video
-          id="video"
-          class="video"
-          controls
-          playsinline
-          preload="metadata">
-        </video>
+    <!-- HEADER / BOOT (always present, no fade) -->
+    <header class="hero" aria-label="Retronyte Boot">
+      <div class="logoRow">
+        <img class="logo" src="./assets/logo.png" alt="Retronyte Logo" />
       </div>
 
-      <div class="meta">
-        <div id="title" class="title">Loading…</div>
-        <div id="ridPill" class="rid">RID: —</div>
+      <div class="bootText">
+        <div class="bootLine bootLineMain" aria-label="Tagline">
+          PLUG IN • POWER UP • PLAY ON
+        </div>
+        <div class="bootLine bootInsert" aria-label="Insert Cartridge">
+          INSERT CARTRIDGE
+        </div>
       </div>
 
-      <div id="status" class="status"></div>
+      <nav class="topNav">
+        <a class="navBtn" href="./">Home</a>
+        <a class="navBtn" href="https://discord.com" target="_blank" rel="noreferrer">Join Discord</a>
+      </nav>
+    </header>
+
+    <!-- PLAYER CARD -->
+    <section class="card">
+      <div class="cardTitle">
+        <span class="bolt">⚡</span>
+        <span id="cardTitleText">Retronyte Online</span>
+        <span class="bolt">⚡</span>
+      </div>
+      <div class="cardSub">Featured episodes playable directly on Retronyte.</div>
+
+      <div class="playerShell" id="playerShell">
+        <!-- IMPORTANT: native controls only, no overlays -->
+        <video id="video" class="video" controls playsinline preload="metadata"></video>
+      </div>
+
+      <div class="playerMeta">
+        <div class="nowTitle" id="nowTitle">Loading…</div>
+        <div class="ridPill" id="ridPill">RID: —</div>
+      </div>
     </section>
 
+    <!-- EPISODE LIBRARY -->
     <section class="library">
-      <h2 class="lib-title">Episode Library</h2>
-      <div id="grid" class="grid"></div>
+      <h2 class="libraryTitle">Episode Library</h2>
+      <div id="grid" class="grid" aria-label="Episode Library Grid"></div>
     </section>
 
+    <footer class="foot">© 2026 Retronyte</footer>
   </main>
 
-  <script src="script.js?v=cb1"></script>
+  <script src="./script.js?v=9011"></script>
 </body>
 </html>

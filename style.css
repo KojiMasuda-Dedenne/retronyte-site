@@ -1,157 +1,280 @@
-/* RESET */
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
+/* =========================
+   Retronyte Arcade UI
+   Flicker = clean CRT vibe
+   Player = NO effects / NO overlays
+   ========================= */
 
+:root{
+  --bg: #05050a;
+  --cyan: #27f0ff;
+  --purple: #b13bff;
+  --pink: #ff3bd4;
+  --text: #cfefff;
+  --muted: #82b8c2;
+  --card: rgba(10, 20, 26, .70);
+  --stroke: rgba(39, 240, 255, .18);
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
 body{
-  font-family: monospace;
-  color:#c9fbff;
-  text-align:center;
-  background:
-    radial-gradient(60% 60% at 50% 20%, rgba(85,0,130,.25), transparent 60%),
-    radial-gradient(70% 70% at 50% 60%, rgba(0,180,200,.20), transparent 65%),
-    linear-gradient(180deg, #02030a, #05060b);
+  margin:0;
+  background: radial-gradient(1200px 800px at 50% 20%, rgba(110,50,255,.10), transparent 60%),
+              radial-gradient(900px 600px at 40% 50%, rgba(39,240,255,.08), transparent 60%),
+              var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
 }
 
-/* HEADER */
-.boot-header{
-  margin-top: 40px;
-}
-
-.boot-logo{
-  width: min(680px, 92vw);
-  display:block;
-  margin: 0 auto;
-  filter: drop-shadow(0 0 22px rgba(255,230,120,.35));
-  animation: logoFlicker 3.2s infinite steps(1, end);
-}
-
-@keyframes logoFlicker{
-  0%, 100% { filter: drop-shadow(0 0 24px rgba(255,230,120,.38)); transform: translateZ(0); }
-  6% { filter: drop-shadow(0 0 34px rgba(255,240,160,.55)); }
-  7% { filter: drop-shadow(0 0 18px rgba(255,230,120,.28)); }
-  22% { filter: drop-shadow(0 0 30px rgba(255,240,160,.50)); }
-  23% { filter: drop-shadow(0 0 20px rgba(255,230,120,.30)); }
-  56% { filter: drop-shadow(0 0 36px rgba(255,245,180,.62)); }
-  57% { filter: drop-shadow(0 0 22px rgba(255,230,120,.35)); }
-}
-
-/* PURPLE TEXT */
-.boot-tagline{
-  margin-top: 14px;
-  font-size: 30px;
-  letter-spacing: 4px;
-  color: #c77dff;
-  text-shadow: 0 0 12px rgba(199,125,255,.45);
-}
-
-/* INSERT CARTRIDGE */
-.boot-insert{
-  margin-top: 8px;
-  font-size: 24px;
-  letter-spacing: 2px;
-  color: #b26bff;
-  text-shadow: 0 0 10px rgba(178,107,255,.45);
-}
-
-/* Independent flickers */
-.flicker-purple{
-  animation: purpleFlicker 2.4s infinite steps(1, end);
-  pointer-events: none; /* NEVER blocks clicks */
-}
-@keyframes purpleFlicker{
-  0%,100%{ opacity:1; }
-  8%{ opacity:.72; }
-  9%{ opacity:1; }
-  33%{ opacity:.80; }
-  34%{ opacity:1; }
-  66%{ opacity:.68; }
-  67%{ opacity:1; }
-}
-
-.flicker-insert{
-  animation: insertFlicker 1.35s infinite steps(1, end);
-  pointer-events: none;
-}
-@keyframes insertFlicker{
-  0%,100%{ opacity:1; }
-  50%{ opacity:.20; }
-}
-
-/* MAIN WRAP */
+/* Layout */
 .wrap{
-  width: min(920px, 94vw);
-  margin: 34px auto 60px;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 36px 18px 40px;
 }
 
-/* PLAYER — CLEAN (NO OVERLAYS / NO BEZEL) */
-.player-shell{
-  margin: 18px auto 30px;
+/* HERO (logo centered + always present) */
+.hero{
+  position: relative;
+  padding: 12px 0 18px;
+  text-align: center;
 }
 
-.stage{
-  background: #000;
-  aspect-ratio: 16 / 9;
-  border-radius: 16px;
+.logoRow{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.logo{
+  width: min(620px, 88vw);
+  height: auto;
+  image-rendering: auto;
+  filter: drop-shadow(0 0 28px rgba(255, 225, 100, .15))
+          drop-shadow(0 0 46px rgba(39, 240, 255, .08));
+  /* clean flicker: slight jitter + brightness noise */
+  animation: logoFlicker 5.6s infinite;
+}
+
+.bootText{
+  margin-top: 10px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: 6px;
+  user-select:none;
+}
+
+.bootLine{
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-shadow:
+    0 0 8px rgba(177, 59, 255, .35),
+    0 0 18px rgba(255, 59, 212, .18);
+}
+
+.bootLineMain{
+  font-size: 20px;
+  color: var(--purple);
+  animation: purpleFlicker 3.4s infinite;
+}
+
+.bootInsert{
+  font-size: 16px;
+  color: var(--purple);
+  opacity: .95;
+  animation: insertFlicker 1.15s infinite;
+}
+
+/* Top nav floats right but doesn’t block anything */
+.topNav{
+  position:absolute;
+  right: 0;
+  top: 12px;
+  display:flex;
+  gap:10px;
+}
+.navBtn{
+  display:inline-block;
+  padding: 7px 12px;
+  border-radius: 999px;
+  text-decoration:none;
+  color: var(--text);
+  border: 1px solid rgba(39,240,255,.25);
+  background: rgba(0,0,0,.25);
+  box-shadow: 0 0 18px rgba(39,240,255,.08);
+  font-size: 12px;
+}
+.navBtn:hover{ border-color: rgba(39,240,255,.45); }
+
+/* Card */
+.card{
+  margin: 18px auto 22px;
+  padding: 18px 18px 14px;
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: 14px;
+  box-shadow: 0 0 40px rgba(39,240,255,.06);
+}
+
+.cardTitle{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono";
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: var(--cyan);
+  text-transform: uppercase;
+  font-size: 18px;
+}
+.cardSub{
+  text-align:center;
+  color: var(--muted);
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+.bolt{
+  filter: drop-shadow(0 0 10px rgba(39,240,255,.25));
+}
+
+/* PLAYER — intentionally plain */
+.playerShell{
+  margin-top: 14px;
+  border-radius: 14px;
   overflow: hidden;
-  border: 1px solid rgba(24,243,255,.22);
+  border: 1px solid rgba(39,240,255,.20);
+  background: #000;
+  /* NO glow, NO flicker, NO overlay */
+  box-shadow: none;
+  filter: none;
 }
 
 .video{
-  width:100%;
-  height:100%;
+  width: 100%;
+  height: auto;
   display:block;
-  object-fit: contain;
+  background:#000;
 }
 
-/* META */
-.meta{
-  margin-top: 10px;
+/* Meta */
+.playerMeta{
   display:flex;
-  justify-content: space-between;
   align-items:center;
+  justify-content:space-between;
   gap: 12px;
+  margin-top: 10px;
+  padding: 0 2px;
+}
+.nowTitle{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono";
+  color: var(--cyan);
+  font-weight: 800;
   font-size: 14px;
 }
-
-.title{ color:#9ffcff; }
-
-.rid{
-  color:#ffd8ff;
-  border: 1px solid rgba(199,125,255,.45);
-  padding: 4px 10px;
-  border-radius: 999px;
-  white-space: nowrap;
-}
-
-.status{
-  margin-top: 10px;
+.ridPill{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono";
   font-size: 12px;
-  opacity: .8;
-  color: #9ffcff;
-  min-height: 18px;
+  color: #ffd1ff;
+  border: 1px solid rgba(255, 59, 212, .35);
+  background: rgba(0,0,0,.25);
+  padding: 6px 10px;
+  border-radius: 999px;
 }
 
-/* PLAYLIST */
-.library{ margin-top: 26px; }
-.lib-title{ margin: 0 0 12px; color:#9ffcff; }
-
+/* Library grid */
+.library{
+  margin-top: 10px;
+}
+.libraryTitle{
+  text-align:center;
+  color: var(--cyan);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono";
+  letter-spacing: 1px;
+  margin: 0 0 12px;
+}
 .grid{
   display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap:12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
-
-.card{
-  padding: 12px;
+.tile{
+  display:block;
+  text-decoration:none;
   border-radius: 12px;
-  border: 1px solid rgba(24,243,255,.22);
-  cursor:pointer;
-  background: rgba(0,0,0,.15);
+  border: 1px solid rgba(39,240,255,.18);
+  background: rgba(0,0,0,.22);
+  padding: 12px 12px 10px;
+  transition: transform .12s ease, border-color .12s ease;
+}
+.tile:hover{
+  transform: translateY(-1px);
+  border-color: rgba(39,240,255,.40);
+}
+.tileTitle{
+  color: var(--text);
+  font-weight: 800;
+  font-size: 13px;
+  margin: 0 0 6px;
+}
+.tileRid{
+  color: rgba(255, 59, 212, .90);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono";
+  font-size: 12px;
+  margin: 0;
 }
 
-.card:hover{
-  border-color:#c77dff;
+.foot{
+  text-align:center;
+  color: rgba(255,255,255,.30);
+  margin-top: 24px;
+  font-size: 12px;
 }
 
-.card-title{ font-weight:bold; color:#c9fbff; }
-.card-rid{ font-size:12px; opacity:.7; color:#ffd8ff; margin-top:6px; }
+/* Responsive */
+@media (max-width: 720px){
+  .grid{ grid-template-columns: 1fr; }
+  .topNav{ position: static; justify-content:center; margin-top: 10px; }
+  .bootLineMain{ font-size: 18px; }
+  .bootInsert{ font-size: 14px; }
+}
+
+/* =========================
+   Flicker animations
+   (clean, subtle, not tacky)
+   ========================= */
+
+@keyframes logoFlicker{
+  0%   { opacity: 1; filter: drop-shadow(0 0 28px rgba(255, 225, 100, .16)) drop-shadow(0 0 46px rgba(39,240,255,.08)); transform: translateX(0); }
+  7%   { opacity: .98; }
+  8%   { opacity: .92; transform: translateX(-.6px); }
+  9%   { opacity: 1; transform: translateX(.4px); }
+  12%  { opacity: .96; }
+  13%  { opacity: 1; }
+  44%  { opacity: 1; }
+  45%  { opacity: .90; }
+  46%  { opacity: 1; }
+  72%  { opacity: .97; }
+  73%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+@keyframes purpleFlicker{
+  0%, 100% { opacity: .95; filter: none; }
+  4%  { opacity: .70; }
+  6%  { opacity: .98; }
+  18% { opacity: .85; }
+  19% { opacity: 1; }
+  58% { opacity: .78; }
+  60% { opacity: .98; }
+  74% { opacity: .90; }
+  75% { opacity: 1; }
+}
+
+@keyframes insertFlicker{
+  0%, 100% { opacity: 1; }
+  50% { opacity: .25; }
+}

@@ -1,93 +1,130 @@
-const video = document.getElementById("video");
-const titleEl = document.getElementById("title");
-const ridEl = document.getElementById("ridPill");
-const grid = document.getElementById("grid");
-const statusEl = document.getElementById("status");
+/* Retronyte Player
+   - loads /videos/library.json
+   - query param ?v=RID
+   - native controls only (no overlays)
+   - spacebar toggles play/pause (when not typing)
+*/
 
-let library = [];
-let index = 0;
+const el = {
+  video: document.getElementById("video"),
+  nowTitle: document.getElementById("nowTitle"),
+  ridPill: document.getElementById("ridPill"),
+  grid: document.getElementById("grid"),
+  cardTitleText: document.getElementById("cardTitleText"),
+};
 
-function setStatus(msg) {
-  statusEl.textContent = msg || "";
+function getParam(name) {
+  const u = new URL(location.href);
+  return u.searchParams.get(name);
 }
 
-function loadVideo(v, autoplay = false) {
-  if (!v || !v.src) {
-    setStatus("⚠ Missing video src in library.json");
-    return;
-  }
-
-  setStatus("");
-
-  video.pause();
-  video.removeAttribute("src");   // forces a true reload
-  video.load();
-
-  video.src = v.src;
-  if (v.poster) video.poster = v.poster;
-
-  titleEl.textContent = v.title || "Retronyte Episode";
-  ridEl.textContent = `RID: ${v.rid || "—"}`;
-
-  video.load();
-
-  if (autoplay) {
-    video.play().catch(() => {});
-  }
+function setURL(rid) {
+  const u = new URL(location.href);
+  if (rid) u.searchParams.set("v", rid);
+  history.replaceState({}, "", u.toString());
 }
 
-function renderGrid() {
-  grid.innerHTML = "";
-  library.forEach((v, i) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <div class="card-title">${v.title || "Untitled Episode"}</div>
-      <div class="card-rid">RID: ${v.rid || "—"}</div>
-    `;
-    card.addEventListener("click", () => {
-      index = i;
-      loadVideo(v, true);
-    });
-    grid.appendChild(card);
-  });
-}
-
-async function fetchJSON(url) {
-  const res = await fetch(url, { cache: "no-store" });
-  if (!res.ok) throw new Error(`${url} -> HTTP ${res.status}`);
+async function loadLibrary() {
+  // IMPORTANT: must be exactly /videos/library.json in your repo
+  const res = await fetch("./videos/library.json?v=" + Date.now(), { cache: "no-store" });
+  if (!res.ok) throw new Error("Could not load playlist (videos/library.json).");
   return await res.json();
 }
 
+function pickInitial(library) {
+  const rid = getParam("v");
+  if (rid) {
+    const found = library.find(x => x.rid === rid);
+    if (found) return found;
+  }
+  return library[0] || null;
+}
+
+function applyVideo(v, autoplay = false) {
+  if (!v) return;
+
+  // Update meta
+  el.nowTitle.textContent = v.title || "Retronyte Episode";
+  el.ridPill.textContent = `RID: ${v.rid || "—"}`;
+  el.cardTitleText.textContent = "Retronyte Online";
+
+  // Set source + poster
+  el.video.pause();
+  el.video.src = v.src;
+  el.video.poster = v.poster || "";
+  el.video.load();
+
+  setURL(v.rid);
+
+  if (autoplay) {
+    el.video.play().catch(() => {});
+  }
+}
+
+function renderGrid(library, currentRid) {
+  el.grid.innerHTML = "";
+
+  for (const v of library) {
+    const a = document.createElement("a");
+    a.className = "tile";
+    a.href = `./?v=${encodeURIComponent(v.rid)}`;
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      applyVideo(v, true);
+      renderGrid(library, v.rid);
+    });
+
+    const t = document.createElement("p");
+    t.className = "tileTitle";
+    t.textContent = v.title;
+
+    const r = document.createElement("p");
+    r.className = "tileRid";
+    r.textContent = `RID: ${v.rid}`;
+
+    a.appendChild(t);
+    a.appendChild(r);
+
+    // simple current highlight
+    if (v.rid === currentRid) {
+      a.style.borderColor = "rgba(255, 59, 212, .55)";
+    }
+
+    el.grid.appendChild(a);
+  }
+}
+
+function bindKeyboard() {
+  window.addEventListener("keydown", (e) => {
+    // Don't hijack typing
+    const tag = (document.activeElement?.tagName || "").toLowerCase();
+    if (tag === "input" || tag === "textarea") return;
+
+    // Space toggles play/pause
+    if (e.code === "Space") {
+      e.preventDefault();
+      if (el.video.paused) el.video.play().catch(() => {});
+      else el.video.pause();
+    }
+  });
+}
+
 (async function init() {
-  setStatus("Loading playlist…");
-
   try {
-    // Try the correct folder path first
-    library = await fetchJSON("videos/library.json");
+    bindKeyboard();
 
-  } catch (e1) {
-    console.warn(e1);
+    const library = await loadLibrary();
+    const first = pickInitial(library);
 
-    try {
-      // Fallback: if you accidentally put it in root
-      library = await fetchJSON("library.json");
-
-    } catch (e2) {
-      console.error(e2);
-      setStatus("❌ Could not load library.json. Make sure it is at /videos/library.json");
-      titleEl.textContent = "No playlist found";
+    if (!first) {
+      el.nowTitle.textContent = "No episodes in library.json";
       return;
     }
-  }
 
-  if (!Array.isArray(library) || library.length === 0) {
-    setStatus("⚠ library.json loaded but is empty.");
-    titleEl.textContent = "Playlist is empty";
-    return;
+    applyVideo(first, false);
+    renderGrid(library, first.rid);
+  } catch (err) {
+    el.nowTitle.textContent = err.message || "Failed to load.";
+    console.error(err);
   }
-
-  setStatus("");
-  renderGrid();
-  loadVideo(library[0], false);
 })();
