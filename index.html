@@ -4,20 +4,22 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Retronyte</title>
-  <link rel="stylesheet" href="style.css?v=cb9001" />
+  <link rel="stylesheet" href="style.css?v=cb9012" />
 </head>
 
 <body>
-  <header class="site-header">
-    <div class="brand">
-      <img class="brand-logo" src="assets/logo.png" alt="Retronyte" />
-      <div class="brand-tagline" aria-hidden="true">PLUG IN • POWER UP • PLAY ON</div>
-      <div class="brand-insert" aria-hidden="true">INSERT CARTRIDGE</div>
+  <!-- BOOT HEADER (STAYS FOREVER, NOT A SPLASH SCREEN) -->
+  <header class="boot-header">
+    <div class="boot-wrap">
+      <img src="assets/logo.png" class="boot-logo" alt="Retronyte" />
+
+      <div class="boot-tagline">PLUG IN • POWER UP • PLAY ON</div>
+      <div class="boot-insert">INSERT CARTRIDGE</div>
     </div>
 
     <nav class="topnav">
       <a href="./">Home</a>
-      <a href="https://discord.gg/YOUR_INVITE" target="_blank" rel="noreferrer">Join Discord</a>
+      <a href="https://discord.gg/juqwaTpX" target="_blank" rel="noreferrer">Join Discord</a>
     </nav>
   </header>
 
@@ -27,43 +29,30 @@
       <div class="panel-sub">Featured episodes playable directly on Retronyte.</div>
     </section>
 
-    <!-- PLAYER -->
-    <section class="player">
+    <!-- PLAYER (BEZEL LIGHTNING WRAPS THIS BOX ONLY) -->
+    <section class="player-shell" id="playerShell">
       <div class="stage" id="stage">
-        <!-- bezel lightning is CSS ::before/::after -->
-        <video id="video" class="video" playsinline preload="metadata"></video>
+        <video id="video" class="video" playsinline preload="metadata" controls></video>
 
-        <!-- overlay play button -->
+        <!-- arcade overlay play (optional, doesn't block controls) -->
         <button id="overlayPlay" class="overlay-play" type="button" aria-label="Play">
           <span class="overlay-ic">▶</span>
           <span class="overlay-txt">PLAY</span>
         </button>
-
-        <div class="hud">
-          <div class="title" id="title">Retronyte Player</div>
-          <div class="rid" id="ridPill">RID: —</div>
-        </div>
       </div>
 
-      <div class="controls">
-        <button class="btn" id="btnPrev" title="Previous">⏮</button>
-        <button class="btn" id="btnPlay" title="Play/Pause">⏯</button>
-        <button class="btn" id="btnNext" title="Next">⏭</button>
+      <div class="meta">
+        <div id="title" class="title">Loading…</div>
+        <div id="ridPill" class="rid">RID: —</div>
+      </div>
 
-        <div class="time">
-          <span id="tCur">0:00</span>
-          <input id="seek" type="range" min="0" max="1000" value="0" />
-          <span id="tDur">0:00</span>
-        </div>
-
-        <input id="vol" class="vol" type="range" min="0" max="1" step="0.01" value="0.85" />
+      <div class="library">
+        <h2 class="lib-title">Episode Library</h2>
+        <div id="grid" class="grid"></div>
       </div>
     </section>
-
-    <h2 class="lib-title">Episode Library</h2>
-    <div class="grid" id="grid"></div>
   </main>
 
-  <script src="script.js?v=cb9001"></script>
+  <script src="script.js?v=cb9012"></script>
 </body>
 </html>
